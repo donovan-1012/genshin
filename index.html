@@ -540,33 +540,45 @@ let currentFilters = { search:'', element:'', nation:'', weapon:'', rarity:0 };
 let currentSort = 'name';
 
 // ─── Fetch ───
+const CACHE_KEY = 'genshin_chars';
+const CACHE_TTL = 3600000; // 1 hour
+
 async function fetchAll() {
   showLoading(true);
   try {
+    // Try cache first
+    const cached = localStorage.getItem(CACHE_KEY);
+    if (cached) {
+      const { data, time } = JSON.parse(cached);
+      if (Date.now() - time < CACHE_TTL) {
+        allChars = data;
+        afterFetch();
+        return;
+      }
+    }
+
     // Get character list
     const slugs = await fetchJSON(`${API}/characters`);
     const bar = document.querySelector('.loading-bar-inner');
     
-    // Fetch all character details in parallel with concurrency control
+    // Fetch all character details in parallel
     const results = [];
-    const concurrency = 10;
+    const concurrency = 20;
     for (let i = 0; i < slugs.length; i += concurrency) {
       const batch = slugs.slice(i, i + concurrency);
       const chunk = await Promise.all(
-        batch.map(slug => fetchJSON(`${API}/characters/${ slug }`).catch(() => null))
+        batch.map(slug => fetchJSON(`${API}/characters/${ slug }?lang=zh-cn`).catch(() => null))
       );
       results.push(...chunk);
       if (bar) bar.style.width = Math.min(100, (results.length / slugs.length) * 100) + '%';
     }
     
     allChars = results.filter(Boolean);
-    // Sort by release date descending (newest first)
-    allChars.sort((a,b) => (b.release||'').localeCompare(a.release||''));
-    
-    filteredChars = [...allChars];
-    applyFilters();
-    renderGrid();
-    showLoading(false);
+    // Filter out Traveler variants
+    allChars = allChars.filter(c => !c.id.startsWith('traveler-'));
+    // Cache
+    try { localStorage.setItem(CACHE_KEY, JSON.stringify({ data: allChars, time: Date.now() })); } catch(e) {}
+    afterFetch();
   } catch(e) {
     console.error('Failed to fetch:', e);
     document.getElementById('charGrid').innerHTML = `
@@ -576,6 +588,14 @@ async function fetchAll() {
       </div>`;
     showLoading(false);
   }
+}
+
+function afterFetch() {
+  allChars.sort((a,b) => (b.release||'').localeCompare(a.release||''));
+  filteredChars = [...allChars];
+  applyFilters();
+  renderGrid();
+  showLoading(false);
 }
 
 async function fetchJSON(url) {
