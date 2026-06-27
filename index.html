@@ -534,6 +534,97 @@ const NAME_CN = {
 };
 function getCN(id) { return NAME_CN[id] || ''; }
 
+// ─── Chinese Descriptions ───
+const ZH_DESC = {
+  albedo:{title:'白垩之子',desc:'被称为「白垩之子」的天才炼金术士，西风骑士团首席炼金术师兼调查小队队长。'},
+  alhaitham:{title:'诲韬诤言',desc:'须弥教令院现任书记官，拥有超凡的智慧与学识。'},
+  aloy:{title:'异界的救世主',desc:'来自诺拉的机器猎人，被命运带到了提瓦特大陆。'},
+  amber:{title:'飞行冠军',desc:'西风骑士团侦察骑士，热爱飞行与兔兔伯爵的元气 girl。'},
+  'arataki-itto':{title:'荒泷派初代头目',desc:'活跃在稻妻花见坂的鬼族青年，荒泷派的老大，豪爽又爱闹腾。'},
+  arlecchino:{title:'孤暝厄月',desc:'愚人众执行官第四席「仆人」，壁炉之家的主人。'},
+  ayaka:{title:'白鹭霜华',desc:'稻妻社奉行神里家的大小姐，端庄优雅的「白鹭公主」。'},
+  ayato:{title:'磐祭叶守',desc:'稻妻社奉行神里家的当家，深藏不露的神里绫人。'},
+  baizhu:{title:'幽夜潜形',desc:'璃月不卜庐的店主，身怀秘密的白术大夫。'},
+  barbara:{title:'闪耀偶像',desc:'西风教会的祈礼牧师，蒙德城的闪耀偶像。'},
+  beidou:{title:'无冕的龙王',desc:'璃月南十字船队的头领，豪迈不拘小节的大姐大。'},
+  bennett:{title:'命运的试金石',desc:'充满冒险精神的少年，虽然运气极差但从不气馁。'},
+  candace:{title:'浮金的誓愿',desc:'阿如村的守护者，拥有黄金般璀璨的意志。'},
+  charlotte:{title:'朗镜索真',desc:'枫丹《蒸汽鸟报》的记者，对新闻有着近乎执着的追求。'},
+  chevreuse:{title:'明律决罚',desc:'枫丹特巡队队长，秉持正义与秩序的执行者。'},
+  chiori:{title:'千之织袖',desc:'枫丹知名设计师，经营着自己的服装店。'},
+  chongyun:{title:'冰寒流转',desc:'璃月驱邪世家的年轻方士，拥有纯阳之体。'},
+  clorinde:{title:'金律裁决',desc:'枫丹决斗代理人，身手矫健的剑术大师。'},
+  collei:{title:'萃念初蘖',desc:'从愚人众实验中幸存下来的少女，柯莱。'},
+  cyno:{title:'缄秘的裁遣',desc:'须弥教令院大风纪官，纪律的严苛执行者。'},
+  dehya:{title:'炽鬃之狮',desc:'须弥沙漠佣兵组织「镀金旅团」的成员，被称为「炽鬃之狮」。'},
+  diluc:{title:'暗夜英雄',desc:'蒙德城最大酒庄「晨曦酒庄」的庄主，暗中守护蒙德的暗夜英雄。'},
+  diona:{title:'猫尾特调',desc:'蒙德「猫尾酒馆」的调酒师，立志要摧毁蒙德酒业。'},
+  dori:{title:'梦园藏金',desc:'须弥最富有的商人，对摩拉有着狂热的追求。'},
+  emilie:{title:'络命丝',desc:'枫丹著名的香水设计师，对香气有着独特的见解。'},
+  eula:{title:'浪沫的旋舞',desc:'西风骑士团游击小队队长，劳伦斯家族的末裔。'},
+  faruzan:{title:'机逐封秘',desc:'须弥教令院知论派学者，对古代机关术有深入研究。'},
+  fischl:{title:'断罪之皇女',desc:'自称「断罪之皇女」的中二少女，和夜鸦奥兹一起冒险。'},
+  freminet:{title:'深潜者',desc:'枫丹的潜水员，沉默寡言但内心细腻。'},
+  furina:{title:'不休独舞',desc:'枫丹水神，众水、众民与众律法的女王。'},
+  gaming:{title:'骏猊頕首',desc:'来自璃月的舞兽艺人，身手矫健的年轻人。'},
+  ganyu:{title:'循循守月',desc:'璃月月海亭的秘书，半仙半人的少女。'},
+  gorou:{title:'忍犬·汪汪',desc:'海祇岛反抗军的将领，忠心耿耿的「大将」。'},
+  'hu-tao':{title:'往生堂第七十七代堂主',desc:'璃月往生堂的年轻堂主，古灵精怪的胡桃。'},
+  jean:{title:'蒲公英骑士',desc:'西风骑士团代理团长，蒙德的守护者「蒲公英骑士」。'},
+  kachina:{title:'',desc:'纳塔的年轻战士，热情而勇敢。'},
+  kaeya:{title:'寒风剑士',desc:'西风骑士团骑兵队长，神秘而又可靠的凯亚。'},
+  kaveh:{title:'寂忿峻岭',desc:'须弥著名的建筑师，才华横溢的卡维。'},
+  kazuha:{title:'红叶逐荒波',desc:'来自稻妻的流浪武士，如今是南十字船队的船员。'},
+  keqing:{title:'霆霓快雨',desc:'璃月七星中的「玉衡星」，雷厉风行的刻晴。'},
+  kinich:{title:'',desc:'来自纳塔的龙伙伴猎人。'},
+  kirara:{title:'琉焰弄影',desc:'稻妻的快递员，其实是猫又一族。'},
+  klee:{title:'逃跑的太阳',desc:'西风骑士团的火花骑士，可莉最喜欢炸鱼了！'},
+  kokomi:{title:'真珠之智',desc:'海祇岛现人神巫女兼反抗军领袖，珊瑚宫心海。'},
+  'kuki-shinobu':{title:'烦恼刈除',desc:'荒泷派的副手，多才多艺的久岐忍。'},
+  layla:{title:'星辉磐固',desc:'须弥教令院的学者，研究星空的莱依拉。'},
+  lisa:{title:'蔷薇魔女',desc:'西风骑士团图书馆的管理员，须弥教令院天才毕业生。'},
+  lynette:{title:'粉团猫尾',desc:'枫丹的魔术助手，林尼的妹妹琳妮特。'},
+  lyney:{title:'惑光幻戏',desc:'枫丹的著名魔术师，渊深的林尼。'},
+  mika:{title:'晴霜的标绘',desc:'西风骑士团测绘员，温和有礼的米卡。'},
+  mona:{title:'星天水镜',desc:'伟大的占星术士莫娜，虽然很穷但是很有格调。'},
+  mualani:{title:'',desc:'纳塔的向导，热情奔放。'},
+  nahida:{title:'白草净华',desc:'须弥草神，智慧的化身「小吉祥草王」。'},
+  navia:{title:'明花曳影',desc:'枫丹刺玫会的会长，优雅又坚强的娜维娅。'},
+  neuvillette:{title:'潮涌之章',desc:'枫丹最高审判官，众水之主人。'},
+  nilou:{title:'莲光落舞',desc:'须弥祖拜尔剧场的舞者，如莲花般绽放的妮露。'},
+  ningguang:{title:'掩月天权',desc:'璃月七星中的「天权星」，富可敌国的凝光。'},
+  noelle:{title:'蔷薇少女',desc:'西风骑士团的女仆，梦想成为正式骑士的诺艾尔。'},
+  qiqi:{title:'冰冻还魂',desc:'璃月不卜庐的采药姑娘兼僵尸学徒。'},
+  raiden:{title:'一心净土',desc:'稻妻雷电将军，永恒的追求者。'},
+  razor:{title:'狼少年',desc:'被狼群养大的少年，和狼一起生活在奔狼领。'},
+  rosaria:{title:'荆棘之冠',desc:'西风教会的修女，言行冷酷的罗莎莉亚。'},
+  sara:{title:'鸦羽的卫士',desc:'天领奉行的将领，雷电将军的忠实拥护者。'},
+  sayu:{title:'忍法·小月中',desc:'终末番的忍者，小小一只的早柚。'},
+  sethos:{title:'',desc:'须弥沙漠的年轻祭司，赛索斯。'},
+  shenhe:{title:'孤辰茕怀',desc:'驱邪世家旁系之子，仙人的弟子申鹤。'},
+  'shikanoin-heizou':{title:'心朝乂安',desc:'天领奉行的侦探，精明能干的鹿野院平藏。'},
+  sigewinne:{title:'',desc:'枫丹梅洛彼得堡的护士长。'},
+  sucrose:{title:'无害甜度',desc:'西风骑士团炼金术士，专注于生物炼金的砂糖。'},
+  tartaglia:{title:'公子',desc:'愚人众执行官第十一位「公子」，来自至冬国的战斗狂。'},
+  thoma:{title:'渡来介者',desc:'社奉行神里家的家政官，在稻妻生活的蒙德人。'},
+  tighnari:{title:'浅蔚轻行',desc:'须弥巡林官，道成林的守护者提纳里。'},
+  venti:{title:'风色诗人',desc:'蒙德的风神，自由自在的吟游诗人温迪。'},
+  wanderer:{title:'渡来者',desc:'超越一切藩篱的流浪之人。'},
+  wriothesley:{title:'寂罪的密使',desc:'枫丹梅洛彼得堡的管理者。'},
+  xiangling:{title:'百味一理',desc:'璃月「万民堂」的大厨，热衷于研究新菜式。'},
+  xianyun:{title:'鸾音鹤信',desc:'三眼五显仙人之一，擅长机关术的「留云借风真君」。'},
+  xiao:{title:'护法夜叉',desc:'守护璃月的仙人「降魔大圣」，夜叉魈。'},
+  xingqiu:{title:'少年春衫薄',desc:'璃月飞云商会的二少爷，也是剑术爱好者。'},
+  xinyan:{title:'爆裂摇滚',desc:'璃月唯一的摇滚乐手，热情奔放的辛焱。'},
+  'yae-miko':{title:'浮世笑百姿',desc:'稻妻鸣神大社的宫司，八重堂的老板。'},
+  yanfei:{title:'智明无邪',desc:'璃月的律法咨询师，半仙之兽烟绯。'},
+  yaoyao:{title:'仙蕊玲珑',desc:'瑶瑶，萍姥姥的弟子。'},
+  yelan:{title:'绮思晷日',desc:'在璃月总务司的神秘人士，善于收集情报的夜兰。'},
+  yoimiya:{title:'琉焰华舞',desc:'稻妻「长野原烟花店」的店长，烟花匠宵宫。'},
+  'yun-jin':{title:'虹章座',desc:'璃月云翰社的当家，著名的戏曲演员云堇。'},
+  zhongli:{title:'尘世闲游',desc:'璃月的岩神，如今以「钟离」之名游历人间。'}
+};
+
 let allChars = [];
 let filteredChars = [];
 let currentFilters = { search:'', element:'', nation:'', weapon:'', rarity:0 };
@@ -793,7 +884,7 @@ function openModal(slug) {
         </div>
         <div class="hi-text">
           <h2>${getCN(c.id) ? getCN(c.id)+' '+c.name : c.name}</h2>
-          <div class="title">${c.title||''} · ${stars}</div>
+          <div class="title">${ZH_DESC[c.id]?.title || c.title||''} · ${stars}</div>
         </div>
       </div>
     </div>
@@ -834,7 +925,7 @@ function openModal(slug) {
         </div>
       </div>
       
-      ${c.description ? `<div class="desc-box">${c.description}</div>` : ''}
+      ${c.description ? `<div class="desc-box">${ZH_DESC[c.id]?.desc || c.description}</div>` : ''}
       
       ${talentsHTML ? `<div class="section-title">⚔️ 战斗天赋</div><div class="talent-list">${talentsHTML}</div>` : ''}
       
