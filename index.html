@@ -567,7 +567,7 @@ async function fetchAll() {
     for (let i = 0; i < slugs.length; i += concurrency) {
       const batch = slugs.slice(i, i + concurrency);
       const chunk = await Promise.all(
-        batch.map(slug => fetchJSON(`${API}/characters/${ slug }?lang=zh-cn`).catch(() => null))
+        batch.map(slug => fetchJSON(`${API}/characters/${ slug }`).catch(() => null))
       );
       results.push(...chunk);
       if (bar) bar.style.width = Math.min(100, (results.length / slugs.length) * 100) + '%';
