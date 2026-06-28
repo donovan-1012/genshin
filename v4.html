@@ -1,0 +1,2071 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+<meta http-equiv="Pragma" content="no-cache">
+<meta http-equiv="Expires" content="0">
+<title>原神 · 角色图鉴 v4</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@300;400;500;600;700;900&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #0b0d15;
+  --bg2: #11131e;
+  --bg3: #181b2a;
+  --card: #1a1d2e;
+  --card-hover: #222640;
+  --border: rgba(255,255,255,0.06);
+  --text: #e8e8f0;
+  --text2: #8888a0;
+  --text3: #555570;
+  --gold: #c8a94d;
+  --gold-light: #e8d48b;
+  --shadow: rgba(0,0,0,0.4);
+  --radius: 14px;
+  --radius-sm: 10px;
+  --transition: 0.3s cubic-bezier(0.4,0,0.2,1);
+  --star: #c8a94d;
+  --star-bg: #3a3a50;
+  --accent: #c8a94d;
+  --header-bg: rgba(11,13,21,0.85);
+}
+
+/* Element Colors */
+.e-Pyro { --ele: #ef4444; --ele-bg: rgba(239,68,68,0.15); --ele-glow: rgba(239,68,68,0.3); }
+.e-Hydro { --ele: #3b82f6; --ele-bg: rgba(59,130,246,0.15); --ele-glow: rgba(59,130,246,0.3); }
+.e-Anemo { --ele: #22c55e; --ele-bg: rgba(34,197,94,0.15); --ele-glow: rgba(34,197,94,0.3); }
+.e-Electro { --ele: #a855f7; --ele-bg: rgba(168,85,247,0.15); --ele-glow: rgba(168,85,247,0.3); }
+.e-Dendro { --ele: #84cc16; --ele-bg: rgba(132,204,22,0.15); --ele-glow: rgba(132,204,22,0.3); }
+.e-Cryo { --ele: #67e8f9; --ele-bg: rgba(103,232,249,0.15); --ele-glow: rgba(103,232,249,0.3); }
+.e-Geo { --ele: #f59e0b; --ele-bg: rgba(245,158,11,0.15); --ele-glow: rgba(245,158,11,0.3); }
+
+* { margin:0; padding:0; box-sizing:border-box; }
+body {
+  font-family: 'Noto Sans SC',-apple-system,sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  min-height:100vh;
+  overflow-x:hidden;
+}
+::-webkit-scrollbar { width:6px; }
+::-webkit-scrollbar-track { background:var(--bg); }
+::-webkit-scrollbar-thumb { background:var(--text3); border-radius:3px; }
+
+/* ─── Header ─── */
+.header {
+  position:sticky; top:0; z-index:100;
+  background: var(--header-bg);
+  backdrop-filter: blur(20px);
+  border-bottom:1px solid var(--border);
+  padding:16px 24px;
+}
+.header-inner {
+  max-width:1400px; margin:0 auto;
+  display:flex; align-items:center; gap:16px; flex-wrap:wrap;
+}
+.header h1 {
+  font-size:22px; font-weight:700;
+  background: linear-gradient(135deg,#c8a94d,#e8d48b,#c8a94d);
+  -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text;
+  white-space:nowrap;
+  letter-spacing:2px;
+}
+.header h1 span { font-weight:300; opacity:0.6; }
+
+/* ─── Search ─── */
+.search-wrap {
+  flex:1; min-width:180px; position:relative;
+}
+.search-wrap i {
+  position:absolute; left:14px; top:50%; transform:translateY(-50%);
+  color:var(--text3); font-size:14px;
+  pointer-events:none;
+}
+.search-wrap input {
+  width:100%; padding:10px 14px 10px 38px;
+  border:1px solid var(--border); border-radius:10px;
+  background: var(--bg3); color:var(--text);
+  font-size:14px; font-family:inherit;
+  outline:none; transition:var(--transition);
+}
+.search-wrap input:focus { border-color:var(--gold); box-shadow:0 0 20px rgba(200,169,77,0.1); }
+.search-wrap input::placeholder { color:var(--text3); }
+
+/* ─── Filter Bar ─── */
+.filters {
+  display:flex; align-items:center; gap:8px; flex-wrap:wrap;
+}
+.filter-group {
+  display:flex; align-items:center; gap:4px;
+  background:var(--bg3); border-radius:10px; padding:4px;
+  border:1px solid var(--border);
+}
+.filter-btn {
+  padding:6px 12px; border:none; border-radius:7px;
+  background:transparent; color:var(--text2);
+  font-size:12px; font-family:inherit; cursor:pointer;
+  transition:var(--transition); white-space:nowrap;
+  display:flex; align-items:center; gap:4px;
+}
+.filter-btn:hover { color:var(--text); background:rgba(255,255,255,0.05); }
+.filter-btn.active {
+  background:var(--gold); color:#0b0d15; font-weight:600;
+}
+.filter-btn .dot {
+  width:8px; height:8px; border-radius:50%; display:inline-block;
+}
+.filter-btn .star-icon { color:var(--star); font-size:11px; }
+
+/* ─── Sort ─── */
+.sort-select {
+  padding:8px 12px; border:1px solid var(--border); border-radius:10px;
+  background:var(--bg3); color:var(--text2); font-size:12px;
+  font-family:inherit; cursor:pointer; outline:none;
+  transition:var(--transition);
+}
+.sort-select:hover, .sort-select:focus { border-color:var(--gold); color:var(--text); }
+
+/* ─── Stats Bar ─── */
+.stats-bar {
+  max-width:1400px; margin:12px auto 0;
+  display:flex; justify-content:space-between; align-items:center;
+  padding:0 4px 4px;
+}
+.stats-bar .count { font-size:13px; color:var(--text3); }
+.stats-bar .count strong { color:var(--gold); font-weight:600; }
+.random-btn {
+  padding:6px 16px; border:none; border-radius:8px;
+  background:linear-gradient(135deg,var(--gold),#b8942e);
+  color:#0b0d15; font-size:12px; font-weight:600;
+  font-family:inherit; cursor:pointer;
+  transition:var(--transition);
+}
+.random-btn:hover { transform:scale(1.05); box-shadow:0 0 20px rgba(200,169,77,0.3); }
+
+/* ─── Character Grid ─── */
+.grid-wrap {
+  max-width:1400px; margin:0 auto; padding:20px 24px 60px;
+}
+.grid {
+  display:grid;
+  grid-template-columns:repeat(auto-fill,minmax(170px,1fr));
+  gap:14px;
+}
+
+/* ─── Character Card ─── */
+.char-card {
+  position:relative;
+  background:var(--card);
+  border:1px solid var(--border);
+  border-radius:var(--radius);
+  overflow:hidden;
+  cursor:pointer;
+  transition:var(--transition);
+  animation: cardIn 0.4s ease both;
+}
+@keyframes cardIn {
+  from { opacity:0; transform:translateY(20px) scale(0.95); }
+  to { opacity:1; transform:translateY(0) scale(1); }
+}
+.char-card:hover {
+  transform:translateY(-6px);
+  border-color:var(--gold);
+  box-shadow:0 12px 40px rgba(200,169,77,0.12);
+}
+.char-card .img-wrap {
+  position:relative;
+  width:100%; aspect-ratio:1;
+  background:var(--bg2);
+  display:flex; align-items:center; justify-content:center;
+  overflow:hidden;
+}
+.char-card .img-wrap img {
+  width:100%; height:100%; object-fit:cover;
+  transition:transform 0.5s ease;
+}
+.char-card:hover .img-wrap img { transform:scale(1.08); }
+.char-card .rarity-badge {
+  position:absolute; top:8px; right:8px;
+  display:flex; gap:1px;
+}
+.char-card .rarity-badge .s {
+  font-size:10px; color:var(--star);
+  text-shadow:0 0 6px rgba(200,169,77,0.5);
+}
+.char-card .ele-badge {
+  position:absolute; top:8px; left:8px;
+  width:26px; height:26px; border-radius:50%;
+  display:flex; align-items:center; justify-content:center;
+  font-size:13px;
+  background:var(--ele-bg);
+  box-shadow:0 0 10px var(--ele-glow);
+}
+.char-card .info {
+  padding:12px 14px 14px;
+}
+.char-card .name {
+  font-size:15px; font-weight:600;
+  margin-bottom:4px;
+  white-space:nowrap; overflow:hidden; text-overflow:ellipsis;
+}
+.char-card .tags {
+  display:flex; gap:6px; flex-wrap:wrap;
+}
+.char-card .tag {
+  font-size:11px; padding:2px 8px; border-radius:4px;
+  background:var(--bg3); color:var(--text2);
+  display:flex; align-items:center; gap:3px;
+}
+.char-card .tag .ele-dot {
+  width:6px; height:6px; border-radius:50%; display:inline-block;
+}
+
+/* ─── Empty State ─── */
+.empty-state {
+  grid-column:1/-1;
+  text-align:center; padding:80px 20px;
+  color:var(--text3);
+}
+.empty-state .icon { font-size:48px; margin-bottom:16px; opacity:0.4; }
+.empty-state p { font-size:14px; }
+
+/* ─── Loading ─── */
+.loading-state {
+  grid-column:1/-1;
+  text-align:center; padding:120px 20px;
+}
+.spinner {
+  width:48px; height:48px; margin:0 auto 20px;
+  border:3px solid var(--border);
+  border-top-color:var(--gold);
+  border-radius:50%;
+  animation: spin 0.8s linear infinite;
+}
+@keyframes spin { to { transform:rotate(360deg); } }
+.loading-state p { color:var(--text3); font-size:14px; }
+.loading-bar {
+  width:240px; height:3px; margin:16px auto 0;
+  background:var(--bg3); border-radius:2px; overflow:hidden;
+}
+.loading-bar-inner {
+  height:100%; width:0%;
+  background:linear-gradient(90deg,var(--gold),#e8d48b);
+  border-radius:2px;
+  transition:width 0.3s ease;
+}
+
+/* ─── Modal ─── */
+.modal-overlay {
+  position:fixed; inset:0; z-index:1000;
+  background:rgba(0,0,0,0.75);
+  backdrop-filter:blur(8px);
+  display:none; align-items:center; justify-content:center;
+  padding:20px;
+}
+.modal-overlay.open { display:flex; }
+.modal {
+  position:relative;
+  width:100%; max-width:820px;
+  max-height:90vh; overflow-y:auto;
+  background:var(--bg2);
+  border:1px solid var(--border);
+  border-radius:20px;
+  animation: modalIn 0.4s ease;
+  box-shadow:0 24px 80px rgba(0,0,0,0.5);
+}
+@keyframes modalIn {
+  from { opacity:0; transform:scale(0.9) translateY(20px); }
+  to { opacity:1; transform:scale(1) translateY(0); }
+}
+.modal::-webkit-scrollbar { width:4px; }
+
+.modal-close {
+  position:absolute; top:16px; right:16px; z-index:10;
+  width:36px; height:36px; border-radius:50%;
+  border:1px solid rgba(255,255,255,0.15);
+  background:rgba(0,0,0,0.5);
+  color:var(--text2); font-size:16px;
+  cursor:pointer; display:flex; align-items:center; justify-content:center;
+  transition:var(--transition);
+  backdrop-filter:blur(10px);
+}
+.modal-close:hover { background:rgba(255,255,255,0.1); color:var(--text); }
+
+.modal-header {
+  position:relative;
+  height:340px; overflow:hidden;
+  background:var(--bg);
+}
+.modal-header img {
+  width:100%; height:100%; object-fit:cover;
+  object-position:top center;
+}
+.modal-header .header-overlay {
+  position:absolute; bottom:0; left:0; right:0;
+  height:60%;
+  background:linear-gradient(transparent,var(--bg2));
+}
+.modal-header .header-info {
+  position:absolute; bottom:24px; left:28px; right:28px;
+  display:flex; align-items:flex-end; gap:16px;
+}
+.modal-header .header-info .icon-wrap {
+  width:72px; height:72px; border-radius:16px;
+  overflow:hidden; border:2px solid var(--gold);
+  box-shadow:0 8px 24px rgba(0,0,0,0.4);
+  flex-shrink:0;
+  background:var(--bg);
+}
+.modal-header .header-info .icon-wrap img {
+  width:100%; height:100%; object-fit:cover;
+}
+.modal-header .header-info .hi-text h2 {
+  font-size:28px; font-weight:700;
+  text-shadow:0 2px 12px rgba(0,0,0,0.5);
+}
+.modal-header .header-info .hi-text .title {
+  font-size:14px; color:var(--gold-light);
+  margin-top:2px;
+}
+
+.modal-body { padding:28px; }
+
+/* Detail Grid */
+.detail-grid {
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(140px,1fr));
+  gap:12px; margin-bottom:28px;
+}
+.detail-item {
+  background:var(--card); border-radius:var(--radius-sm);
+  padding:14px 16px; border:1px solid var(--border);
+}
+.detail-item .label {
+  font-size:11px; color:var(--text3); text-transform:uppercase;
+  letter-spacing:1px; margin-bottom:6px;
+}
+.detail-item .value {
+  font-size:14px; font-weight:500;
+  display:flex; align-items:center; gap:6px;
+}
+.detail-item .value .ele-dot {
+  width:8px; height:8px; border-radius:50%; display:inline-block;
+}
+
+/* Description */
+.desc-box {
+  background:var(--card); border-radius:var(--radius-sm);
+  padding:16px 20px; margin-bottom:24px;
+  border:1px solid var(--border);
+  font-size:14px; line-height:1.8; color:var(--text2);
+  font-style:italic;
+}
+.desc-box::before { content:'"'; color:var(--gold); font-size:20px; }
+.desc-box::after { content:'"'; color:var(--gold); font-size:20px; }
+
+/* Talents Section */
+.section-title {
+  font-size:16px; font-weight:600;
+  margin-bottom:14px; padding-bottom:8px;
+  border-bottom:1px solid var(--border);
+  color:var(--gold);
+  display:flex; align-items:center; gap:8px;
+}
+.talent-list { display:flex; flex-direction:column; gap:10px; margin-bottom:24px; }
+.talent-item {
+  background:var(--card); border-radius:var(--radius-sm);
+  padding:14px 18px; border:1px solid var(--border);
+}
+.talent-item .t-name {
+  font-size:14px; font-weight:600; margin-bottom:4px;
+  display:flex; align-items:center; gap:8px;
+}
+.talent-item .t-type {
+  font-size:11px; color:var(--text3); font-weight:400;
+  background:var(--bg3); padding:2px 8px; border-radius:4px;
+}
+.talent-item .t-desc {
+  font-size:12px; color:var(--text2); line-height:1.7;
+  display:-webkit-box; -webkit-line-clamp:3; -webkit-box-orient:vertical;
+  overflow:hidden;
+}
+
+/* Constellations */
+.const-list { display:flex; flex-direction:column; gap:10px; margin-bottom:24px; }
+.const-item {
+  background:var(--card); border-radius:var(--radius-sm);
+  padding:12px 16px; border:1px solid var(--border);
+}
+.const-item .c-name {
+  font-size:13px; font-weight:600; margin-bottom:3px;
+  display:flex; align-items:center; gap:8px;
+}
+.const-item .c-name .c-lv {
+  font-size:10px; color:var(--text3); font-weight:400;
+  background:var(--bg3); padding:2px 6px; border-radius:4px;
+}
+.const-item .c-desc {
+  font-size:12px; color:var(--text2); line-height:1.6;
+}
+
+/* Message on close attempt */
+.close-msg {
+  position:fixed; bottom:24px; left:50%; transform:translateX(-50%);
+  background:rgba(0,0,0,0.85); backdrop-filter:blur(12px);
+  border:1px solid var(--border);
+  padding:12px 24px; border-radius:12px;
+  color:var(--text2); font-size:13px;
+  z-index:2000;
+  opacity:0; transition:opacity 0.4s ease;
+  pointer-events:none;
+}
+.close-msg.show { opacity:1; }
+
+/* ─── Responsive ─── */
+@media(max-width:768px) {
+  .header { padding:12px 16px; }
+  .header-inner { gap:10px; }
+  .header h1 { font-size:18px; }
+  .filters { order:3; width:100%; }
+  .grid-wrap { padding:14px 14px 40px; }
+  .grid { grid-template-columns:repeat(auto-fill,minmax(140px,1fr)); gap:10px; }
+  .modal-header { height:240px; }
+  .modal-header .header-info { bottom:16px; left:16px; right:16px; }
+  .modal-header .header-info .icon-wrap { width:52px; height:52px; }
+  .modal-header .header-info .hi-text h2 { font-size:20px; }
+  .modal-body { padding:16px; }
+  .detail-grid { grid-template-columns:repeat(2,1fr); }
+}
+@media(max-width:480px) {
+  .grid { grid-template-columns:repeat(2,1fr); gap:8px; }
+  .char-card .info { padding:8px 10px 10px; }
+  .char-card .name { font-size:13px; }
+  .filter-btn { padding:4px 8px; font-size:11px; }
+}
+</style>
+</head>
+<body>
+
+<!-- Header -->
+<header class="header">
+  <div class="header-inner">
+    <h1>原神 <span>· 角色图鉴</span></h1>
+    <div class="search-wrap">
+      <i>🔍</i>
+      <input type="text" id="searchInput" placeholder="搜索角色名称..." autocomplete="off">
+    </div>
+    <div class="filters" id="filterBar"></div>
+  </div>
+  <div class="stats-bar">
+    <div class="count">共 <strong id="totalCount">0</strong> 位角色</div>
+    <button class="random-btn" onclick="pickRandom()">🎲 随机角色</button>
+  </div>
+</header>
+
+<!-- Grid -->
+<div class="grid-wrap">
+  <div class="grid" id="charGrid"></div>
+</div>
+
+<!-- Modal -->
+<div class="modal-overlay" id="modalOverlay">
+  <div class="modal" id="modalContent"></div>
+</div>
+
+<!-- Close message -->
+<div class="close-msg" id="closeMsg"></div>
+
+<script>
+// ─── Clear old caches ───
+try {
+  for (let i = 0; i < localStorage.length; i++) {
+    const key = localStorage.key(i);
+    if (key && key !== 'genshin_chars_v3') localStorage.removeItem(key);
+  }
+} catch(e) {}
+
+// ─── Constants ───
+const API = 'https://genshin.jmp.blue';
+const ELEMENTS = ['Pyro','Hydro','Anemo','Electro','Dendro','Cryo','Geo'];
+const NATIONS = ['Mondstadt','Liyue','Inazuma','Sumeru','Fontaine','Natlan','Snezhnaya'];
+const WEAPONS = ['Sword','Claymore','Polearm','Bow','Catalyst'];
+const RARITIES = [4,5];
+
+const EMOJI = {
+  Pyro:'🔥',Hydro:'💧',Anemo:'🌪️',Electro:'⚡',Dendro:'🌿',Cryo:'❄️',Geo:'🪨',
+  Sword:'🗡️',Claymore:'⚔️',Polearm:'🔱',Bow:'🏹',Catalyst:'📖',
+  Mondstadt:'🏰',Liyue:'🏮',Inazuma:'⛩️',Sumeru:'🏜️',Fontaine:'💎',Natlan:'🌋',Snezhnaya:'❄️'
+};
+
+const ELE_CN = { Pyro:'火',Hydro:'水',Anemo:'风',Electro:'雷',Dendro:'草',Cryo:'冰',Geo:'岩' };
+const WEAPON_CN = { Sword:'单手剑',Claymore:'双手剑',Polearm:'长柄武器',Bow:'弓',Catalyst:'法器' };
+const NATION_CN = {
+  Mondstadt:'蒙德',Liyue:'璃月',Inazuma:'稻妻',Sumeru:'须弥',
+  Fontaine:'枫丹',Natlan:'纳塔',Snezhnaya:'至冬'
+};
+const RARITY_CN = { 4:'四星',5:'五星' };
+
+const ELE_ORDER = { Pyro:0,Hydro:1,Anemo:2,Electro:3,Dendro:4,Cryo:5,Geo:6 };
+
+// ─── Chinese Names ───
+const NAME_CN = {
+  albedo:'阿贝多',alhaitham:'艾尔海森',aloy:'亚萝伊',amber:'安柏',
+  'arataki-itto':'荒泷一斗',arlecchino:'阿蕾奇诺',ayaka:'神里绫华',ayato:'神里绫人',
+  baizhu:'白术',barbara:'芭芭拉',beidou:'北斗',bennett:'班尼特',
+  candace:'坎蒂丝',charlotte:'夏洛蒂',chevreuse:'夏沃蕾',chiori:'千织',
+  chongyun:'重云',clorinde:'克洛琳德',collei:'柯莱',cyno:'赛诺',
+  dehya:'迪希雅',diluc:'迪卢克',diona:'迪奥娜',dori:'多莉',
+  emilie:'艾梅莉埃',eula:'优菈',
+  faruzan:'珐露珊',fischl:'菲谢尔',freminet:'菲米尼',furina:'芙宁娜',
+  gaming:'嘉明',ganyu:'甘雨',gorou:'五郎',
+  'hu-tao':'胡桃',
+  jean:'琴',
+  kachina:'卡齐娜',kaeya:'凯亚',kaveh:'卡维',kazuha:'枫原万叶',
+  keqing:'刻晴',kinich:'基尼奇',kirara:'绮良良',klee:'可莉',kokomi:'珊瑚宫心海',
+  'kuki-shinobu':'久岐忍',
+  layla:'莱依拉',lisa:'丽莎',lynette:'琳妮特',lyney:'林尼',
+  mika:'米卡',mona:'莫娜',mualani:'玛拉妮',
+  nahida:'纳西妲',navia:'娜维娅',neuvillette:'那维莱特',nilou:'妮露',
+  ningguang:'凝光',noelle:'诺艾尔',
+  qiqi:'七七',
+  raiden:'雷电将军',razor:'雷泽',rosaria:'罗莎莉亚',
+  sara:'九条裟罗',sayu:'早柚',sethos:'赛索斯',shenhe:'申鹤',
+  'shikanoin-heizou':'鹿野院平藏',sigewinne:'希格雯',sucrose:'砂糖',
+  tartaglia:'达达利亚',thoma:'托马',tighnari:'提纳里',
+  'traveler-anemo':'旅行者(风)','traveler-dendro':'旅行者(草)','traveler-electro':'旅行者(雷)',
+  'traveler-geo':'旅行者(岩)','traveler-hydro':'旅行者(水)',
+  venti:'温迪',
+  wanderer:'流浪者',wriothesley:'莱欧斯利',
+  xiangling:'香菱',xianyun:'闲云',xiao:'魈',xingqiu:'行秋',xinyan:'辛焱',
+  'yae-miko':'八重神子',yanfei:'烟绯',yaoyao:'瑶瑶',yelan:'夜兰',
+  yoimiya:'宵宫','yun-jin':'云堇',
+  zhongli:'钟离'
+};
+function getCN(id) { return NAME_CN[id] || ''; }
+
+// ─── Chinese Descriptions ───
+const ZH_DESC = {
+  albedo:{title:'白垩之子',desc:'被称为「白垩之子」的天才炼金术士，西风骑士团首席炼金术师兼调查小队队长。'},
+  alhaitham:{title:'诲韬诤言',desc:'须弥教令院现任书记官，拥有超凡的智慧与学识。'},
+  aloy:{title:'异界的救世主',desc:'来自诺拉的机器猎人，被命运带到了提瓦特大陆。'},
+  amber:{title:'飞行冠军',desc:'西风骑士团侦察骑士，热爱飞行与兔兔伯爵的元气 girl。'},
+  'arataki-itto':{title:'荒泷派初代头目',desc:'活跃在稻妻花见坂的鬼族青年，荒泷派的老大，豪爽又爱闹腾。'},
+  arlecchino:{title:'孤暝厄月',desc:'愚人众执行官第四席「仆人」，壁炉之家的主人。'},
+  ayaka:{title:'白鹭霜华',desc:'稻妻社奉行神里家的大小姐，端庄优雅的「白鹭公主」。'},
+  ayato:{title:'磐祭叶守',desc:'稻妻社奉行神里家的当家，深藏不露的神里绫人。'},
+  baizhu:{title:'幽夜潜形',desc:'璃月不卜庐的店主，身怀秘密的白术大夫。'},
+  barbara:{title:'闪耀偶像',desc:'西风教会的祈礼牧师，蒙德城的闪耀偶像。'},
+  beidou:{title:'无冕的龙王',desc:'璃月南十字船队的头领，豪迈不拘小节的大姐大。'},
+  bennett:{title:'命运的试金石',desc:'充满冒险精神的少年，虽然运气极差但从不气馁。'},
+  candace:{title:'浮金的誓愿',desc:'阿如村的守护者，拥有黄金般璀璨的意志。'},
+  charlotte:{title:'朗镜索真',desc:'枫丹《蒸汽鸟报》的记者，对新闻有着近乎执着的追求。'},
+  chevreuse:{title:'明律决罚',desc:'枫丹特巡队队长，秉持正义与秩序的执行者。'},
+  chiori:{title:'千之织袖',desc:'枫丹知名设计师，经营着自己的服装店。'},
+  chongyun:{title:'冰寒流转',desc:'璃月驱邪世家的年轻方士，拥有纯阳之体。'},
+  clorinde:{title:'金律裁决',desc:'枫丹决斗代理人，身手矫健的剑术大师。'},
+  collei:{title:'萃念初蘖',desc:'从愚人众实验中幸存下来的少女，柯莱。'},
+  cyno:{title:'缄秘的裁遣',desc:'须弥教令院大风纪官，纪律的严苛执行者。'},
+  dehya:{title:'炽鬃之狮',desc:'须弥沙漠佣兵组织「镀金旅团」的成员，被称为「炽鬃之狮」。'},
+  diluc:{title:'暗夜英雄',desc:'蒙德城最大酒庄「晨曦酒庄」的庄主，暗中守护蒙德的暗夜英雄。'},
+  diona:{title:'猫尾特调',desc:'蒙德「猫尾酒馆」的调酒师，立志要摧毁蒙德酒业。'},
+  dori:{title:'梦园藏金',desc:'须弥最富有的商人，对摩拉有着狂热的追求。'},
+  emilie:{title:'络命丝',desc:'枫丹著名的香水设计师，对香气有着独特的见解。'},
+  eula:{title:'浪沫的旋舞',desc:'西风骑士团游击小队队长，劳伦斯家族的末裔。'},
+  faruzan:{title:'机逐封秘',desc:'须弥教令院知论派学者，对古代机关术有深入研究。'},
+  fischl:{title:'断罪之皇女',desc:'自称「断罪之皇女」的中二少女，和夜鸦奥兹一起冒险。'},
+  freminet:{title:'深潜者',desc:'枫丹的潜水员，沉默寡言但内心细腻。'},
+  furina:{title:'不休独舞',desc:'枫丹水神，众水、众民与众律法的女王。'},
+  gaming:{title:'骏猊頕首',desc:'来自璃月的舞兽艺人，身手矫健的年轻人。'},
+  ganyu:{title:'循循守月',desc:'璃月月海亭的秘书，半仙半人的少女。'},
+  gorou:{title:'忍犬·汪汪',desc:'海祇岛反抗军的将领，忠心耿耿的「大将」。'},
+  'hu-tao':{title:'往生堂第七十七代堂主',desc:'璃月往生堂的年轻堂主，古灵精怪的胡桃。'},
+  jean:{title:'蒲公英骑士',desc:'西风骑士团代理团长，蒙德的守护者「蒲公英骑士」。'},
+  kachina:{title:'岩晶闪光',desc:'纳塔的年轻战士，热情勇敢的卡齐娜。'},
+  kaeya:{title:'寒风剑士',desc:'西风骑士团骑兵队长，神秘而又可靠的凯亚。'},
+  kaveh:{title:'寂忿峻岭',desc:'须弥著名的建筑师，才华横溢的卡维。'},
+  kazuha:{title:'红叶逐荒波',desc:'来自稻妻的流浪武士，如今是南十字船队的船员。'},
+  keqing:{title:'霆霓快雨',desc:'璃月七星中的「玉衡星」，雷厉风行的刻晴。'},
+  kinich:{title:'狩龙捕影',desc:'来自纳塔的龙伙伴猎人基尼奇，与龙伙伴一同冒险。'},
+  kirara:{title:'琉焰弄影',desc:'稻妻的快递员，其实是猫又一族。'},
+  klee:{title:'逃跑的太阳',desc:'西风骑士团的火花骑士，可莉最喜欢炸鱼了！'},
+  kokomi:{title:'真珠之智',desc:'海祇岛现人神巫女兼反抗军领袖，珊瑚宫心海。'},
+  'kuki-shinobu':{title:'烦恼刈除',desc:'荒泷派的副手，多才多艺的久岐忍。'},
+  layla:{title:'星辉磐固',desc:'须弥教令院的学者，研究星空的莱依拉。'},
+  lisa:{title:'蔷薇魔女',desc:'西风骑士团图书馆的管理员，须弥教令院天才毕业生。'},
+  lynette:{title:'粉团猫尾',desc:'枫丹的魔术助手，林尼的妹妹琳妮特。'},
+  lyney:{title:'惑光幻戏',desc:'枫丹的著名魔术师，渊深的林尼。'},
+  mika:{title:'晴霜的标绘',desc:'西风骑士团测绘员，温和有礼的米卡。'},
+  mona:{title:'星天水镜',desc:'伟大的占星术士莫娜，虽然很穷但是很有格调。'},
+  mualani:{title:'逐浪骑士',desc:'「流泉之众」的向导、冲浪手和水上用品店主。玛拉妮是一位活泼甜美、总能让客人满意的纳塔少女。她骑着冲浪板穿梭于温泉之间，以热情的笑容迎接每一位来到纳塔的旅行者。'},
+  nahida:{title:'白草净华',desc:'须弥草神，智慧的化身「小吉祥草王」。'},
+  navia:{title:'明花曳影',desc:'枫丹刺玫会的会长，优雅又坚强的娜维娅。'},
+  neuvillette:{title:'潮涌之章',desc:'枫丹最高审判官，众水之主人。'},
+  nilou:{title:'莲光落舞',desc:'须弥祖拜尔剧场的舞者，如莲花般绽放的妮露。'},
+  ningguang:{title:'掩月天权',desc:'璃月七星中的「天权星」，富可敌国的凝光。'},
+  noelle:{title:'蔷薇少女',desc:'西风骑士团的女仆，梦想成为正式骑士的诺艾尔。'},
+  qiqi:{title:'冰冻还魂',desc:'璃月不卜庐的采药姑娘兼僵尸学徒。'},
+  raiden:{title:'一心净土',desc:'稻妻雷电将军，永恒的追求者。'},
+  razor:{title:'狼少年',desc:'被狼群养大的少年，和狼一起生活在奔狼领。'},
+  rosaria:{title:'荆棘之冠',desc:'西风教会的修女，言行冷酷的罗莎莉亚。'},
+  sara:{title:'鸦羽的卫士',desc:'天领奉行的将领，雷电将军的忠实拥护者。'},
+  sayu:{title:'忍法·小月中',desc:'终末番的忍者，小小一只的早柚。'},
+  sethos:{title:'密话的守护者',desc:'须弥沙漠的年轻祭司赛索斯，守护着古老的秘密。'},
+  shenhe:{title:'孤辰茕怀',desc:'驱邪世家旁系之子，仙人的弟子申鹤。'},
+  'shikanoin-heizou':{title:'心朝乂安',desc:'天领奉行的侦探，精明能干的鹿野院平藏。'},
+  sigewinne:{title:'疗愈之露',desc:'枫丹梅洛彼得堡的护士长希格雯，用爱心治愈一切伤口。'},
+  sucrose:{title:'无害甜度',desc:'西风骑士团炼金术士，专注于生物炼金的砂糖。'},
+  tartaglia:{title:'公子',desc:'愚人众执行官第十一位「公子」，来自至冬国的战斗狂。'},
+  thoma:{title:'渡来介者',desc:'社奉行神里家的家政官，在稻妻生活的蒙德人。'},
+  tighnari:{title:'浅蔚轻行',desc:'须弥巡林官，道成林的守护者提纳里。'},
+  venti:{title:'风色诗人',desc:'蒙德的风神，自由自在的吟游诗人温迪。'},
+  wanderer:{title:'渡来者',desc:'超越一切藩篱的流浪之人。'},
+  wriothesley:{title:'寂罪的密使',desc:'枫丹梅洛彼得堡的管理者。'},
+  xiangling:{title:'百味一理',desc:'璃月「万民堂」的大厨，热衷于研究新菜式。'},
+  xianyun:{title:'鸾音鹤信',desc:'三眼五显仙人之一，擅长机关术的「留云借风真君」。'},
+  xiao:{title:'护法夜叉',desc:'守护璃月的仙人「降魔大圣」，夜叉魈。'},
+  xingqiu:{title:'少年春衫薄',desc:'璃月飞云商会的二少爷，也是剑术爱好者。'},
+  xinyan:{title:'爆裂摇滚',desc:'璃月唯一的摇滚乐手，热情奔放的辛焱。'},
+  'yae-miko':{title:'浮世笑百姿',desc:'稻妻鸣神大社的宫司，八重堂的老板。'},
+  yanfei:{title:'智明无邪',desc:'璃月的律法咨询师，半仙之兽烟绯。'},
+  yaoyao:{title:'仙蕊玲珑',desc:'瑶瑶，萍姥姥的弟子。'},
+  yelan:{title:'绮思晷日',desc:'在璃月总务司的神秘人士，善于收集情报的夜兰。'},
+  yoimiya:{title:'琉焰华舞',desc:'稻妻「长野原烟花店」的店长，烟花匠宵宫。'},
+  'yun-jin':{title:'虹章座',desc:'璃月云翰社的当家，著名的戏曲演员云堇。'},
+  zhongli:{title:'尘世闲游',desc:'璃月的岩神，如今以「钟离」之名游历人间。'}
+};
+
+const ZH_TALENTS = {
+  "albedo": {
+    talents: ["西风剑术·白", "创生法·拟造阳华", "诞生式·大地之潮"],
+    constellations: ["伊甸之花", "显生之宙", "太阳之华", "神性之陨", "冥古之潮", "无垢之土"]
+  },
+  "alhaitham": {
+    talents: ["四影琢玉", "共相·理式摹写", "殊境·显象结缚"],
+    constellations: ["直观", "辩章", "幽轮", "铭镌", "智识", "正理"]
+  },
+  "aloy": {
+    talents: ["快速射击", "冰尘雪野", "曙光预言"],
+    constellations: ["异界之星"]
+  },
+  "amber": {
+    talents: ["神射手", "爆弹玩偶", "箭雨"],
+    constellations: ["一箭双丘丘！", "一触即发", "烧起来啦！", "才不是寻常布偶", "是兔兔伯爵！", "疾如野火"]
+  },
+  "arataki-itto": {
+    talents: ["荒泷逆袈裟", "魔杀绝技·赤牛发破！", "最恶鬼王·一斗轰临！！"],
+    constellations: ["倘若不知，我讲你听", "纠集众人，斗倒御岳", "水陆自在，牛王同行", "牢狱之灾，茶饭之所", "久 known as 久", "本大爷是荒泷一斗"]
+  },
+  "arlecchino": {
+    talents: ["斩首之邀", "万相化灰", "厄月将升"],
+    constellations: ["「所有的仇与债皆由我偿…」", "「所有的赏与罚皆自我出…」", "「所有的欺诈尽录账簿」", "「一切的盟约自当谨守」", "「一切的罪责我独承担」", "「自此以后，我们将共飨新生。」"]
+  },
+  "ayaka": {
+    talents: ["神里流·倾", "神里流·冰华", "神里流·霜灭"],
+    constellations: ["霜枯的墨染", "三重雪关扉", "花白锦画纸吹雪", "盈缺流返", "花云钟入月", "间月"]
+  },
+  "ayato": {
+    talents: ["神里流·转", "神里流·镜花", "神里流·水囿"],
+    constellations: ["镜华风姿", "世有源泉", "无意弄花", "细水长流", "春水润田", "滥觞之源"]
+  },
+  "baizhu": {
+    talents: ["金匮针解", "太素诊要", "愈气全形论"],
+    constellations: ["悬壶", "动静", "九候", "大患", "真知", "真邪如扣"]
+  },
+  "barbara": {
+    talents: ["水之浅唱", "演唱，开始♪", "闪耀奇迹♪"],
+    constellations: ["彩色歌谣", "元气迸发", "明日之星", "努力即魔法", "纯真的羁绊", "将一切美好献给你"]
+  },
+  "beidou": {
+    talents: ["征涛", "捉浪", "斫雷"],
+    constellations: ["鱼龙沉四方", "赫赫雷涌起", "潮引祸至", "孤辰茕怀", "浪海白马踏", "北斗祓幽厄"]
+  },
+  "bennett": {
+    talents: ["好运剑", "热情过载", "美妙旅程"],
+    constellations: ["冒险憧憬", "踏破绝境", "火热激情", "热情不灭", "探索真知", "烈火与勇气"]
+  },
+  "candace": {
+    talents: ["流耀枪术·守势", "圣仪·苍鹭庇卫", "圣仪·灰鸰衒潮"],
+    constellations: ["回流的赤沙之瞳", "贯月的穿芒之枪", "织成的掠影之辉", "守誓的冠冕之仪", "萦苍的耀金之光", "衍溢的圣仪之潮"]
+  },
+  "charlotte": {
+    talents: ["冷色摄影术", "取景·冰点构图法", "定格·全方位印证"],
+    constellations: ["核实范围", "追求真相的职责", "独立驱动", "监督责任", "良知原则", "有趣报道"]
+  },
+  "chevreuse": {
+    talents: ["线战术·改", "近迫式急促拦射", "爆轰律·方圆阵"],
+    constellations: ["保持阵型的魄力", "诱敌深入的狙杀", "熟练拆解的技巧", "多重速射的秘方", "加强火力的复嬉", "终结罪恶的追索"]
+  },
+  "chiori": {
+    talents: ["织锦红妆", "羽袖一触", "二刀之型·比翼"],
+    constellations: ["绸缎流转", "双丝成缕", "锦绣添花", "裁锦着身", "绫罗尽染", "华服竞艳"]
+  },
+  "chongyun": {
+    talents: ["灭邪四式", "灵刃·重华叠霜", "云开星落"],
+    constellations: ["释凛咏冰", "周天运转", "云尽光生", "浮云霜天", "真道正理", "四灵捧圣"]
+  },
+  "clorinde": {
+    talents: ["逐影剑术·终契", "狩夜之巡", "残光将终"],
+    constellations: ["「自此，行过烛影之帷」", "「自此，直面长夜之危」", "「我将铭记白昼的誓言」", "「铭记泪，生命与仁爱」", "「也铭记黎明终将到来」", "「为此，勿将希望弃扬」"]
+  },
+  "collei": {
+    talents: ["祈颂射艺", "拂花淬叶箭", "猫猫秘宝"],
+    constellations: ["护生之林", "巡山之行", "飘香之夏", "骈麟之赠", "俱象之火", "坠镞之矢"]
+  },
+  "cyno": {
+    talents: ["七圣枪术", "秘仪·律渊渡魂", "圣仪·煅魂的奥义"],
+    constellations: ["立仪", "定仪", "律仪", "畏仪", "冥仪", "羽仪"]
+  },
+  "dehya": {
+    talents: ["拂金剑斗术", "熔铁流狱", "炎啸狮咬"],
+    constellations: ["皎焰不熄", "净沙卫戍", "怒焰炽盛", "誓约羁縻", "鬃狼驰骋", "燎原焚焰"]
+  },
+  "diluc": {
+    talents: ["淬炼之剑", "逆焰之刃", "黎明"],
+    constellations: ["罪之裁断", "炙热余烬", "钢铁炽焰", "流火焦灼", "昭示命运的烈焰", "清算黑暗的炎之剑"]
+  },
+  "diona": {
+    talents: ["猎人射术", "猫爪冻冻", "最烈特调"],
+    constellations: ["特调的余韵", "猫爪冰摇", "还、要、更、好！", "「消酒业！」", "「再加冰！」", "「打烊时间！」"]
+  },
+  "dori": {
+    talents: ["妙显剑术·改", "镇灵之灯·烦恼解决炮", "卡萨扎莱宫的无微不至"],
+    constellations: ["追加投资", "特许经营", "百巧千奇", "酌盈剂虚", "物超所值", "漫掷万镒"]
+  },
+  "emilie": {
+    talents: ["逐影枪术·改", "撷萃调香", "香氛演绎"],
+    constellations: ["淡香浸析", "湖光顶调", "郁馥臻萃", "露茉凝珠", "纯露凝芳", "茉香萦绕"]
+  },
+  "eula": {
+    talents: ["西风剑术·宗室", "冰潮的涡旋", "凝浪之光剑"],
+    constellations: ["光潮的幻象", "弄潮的少女", "劳伦斯的血脉", "自卑的束缚", "骑士的素质", "贵族的义务"]
+  },
+  "faruzan": {
+    talents: ["迴身箭术", "非想风天", "抟风秘道"],
+    constellations: ["真知", "忘知", "歪知之障", "神知", "奇知", "妙道"]
+  },
+  "fischl": {
+    talents: ["罪灭之矢", "夜巡影翼", "至夜幻现"],
+    constellations: ["幽邃鸦渊", "圣裁之羽", "渊色黑翼", "皇女幻绮谭", "夜枭凝辉", "永夜之禽"]
+  },
+  "freminet": {
+    talents: ["飞流剑", "浮冰增压", "猎影潜袭"],
+    constellations: ["深海与泡沫之梦", "企鹅与丰饶之国", "暗流与白砂之歌", "雪月与芦笛之舞", "炉火与欢笑之夜", "梦想与希望之晓"]
+  },
+  "furina": {
+    talents: ["独舞之邀", "孤心沙龙", "万众狂欢"],
+    constellations: ["「爱是难驯鸟，哀乞亦无用。」", "「女人皆善变，仿若水中萍。」", "「秘密藏心间，无人知我名。」", "「若非处幽冥，怎知生可贵！」", "「我已有觉察，他名即是…！」", "「诸君听我颂，共举爱之杯！」"]
+  },
+  "gaming": {
+    talents: ["瑞兽翻月", "醒神吼", "瑞兽降世"],
+    constellations: ["瑞兽眷顾", "瑞兽醒觉", "瑞兽腾跃", "瑞兽佑护", "瑞兽降临", "瑞兽归位"]
+  },
+  "ganyu": {
+    talents: ["流天射术", "山泽麟迹", "降众天华"],
+    constellations: ["饮露", "获麟", "行云", "西狩", "折草", "履虫"]
+  },
+  "gorou": {
+    talents: ["吠犬形攻", "犬坂的远吠", "兽牙逐突形胜战法"],
+    constellations: ["犬奔·疾如风", "犬座·威如雷", "犬势·炎如火", "犬舔·温如水", "犬扑·撼如雷", "犬跃·坚如山"]
+  },
+  "hu-tao": {
+    talents: ["往生秘传枪法", "蝶引来生", "安神秘法"],
+    constellations: ["赤团开时", "雾里看花", "逗留采色", "伴君眠花", "无可奈何花落去", "幽蝶来生"]
+  },
+  "jean": {
+    talents: ["西风剑术", "风压剑", "蒲公英之风"],
+    constellations: ["流转剑脊的暴风", "守护众人的坚盾", "西风吹拂之时", "蒲公英的国土", "须臾一瞬的烈风", "恩眷万民的狮牙"]
+  },
+  "kachina": {
+    talents: ["嵴之啮咬", "出击，冲天转转！", "现在，认真时间！"],
+    constellations: ["晶片，也是一种宝石", "不能少了…冲天转转", "改良型·平衡稳定器", "敌人越多，越要小心", "迄今为止，所有收藏", "这一次，我一定要赢"]
+  },
+  "kaeya": {
+    talents: ["仪典剑术", "霜袭", "凛冽轮舞"],
+    constellations: ["卓越的血脉", "无尽的霜舞", "凛冽的冰戏", "极寒的轻吻", "拥抱寒霜", "轮旋的冰凌"]
+  },
+  "kaveh": {
+    talents: ["旋规设矩", "画则巧施", "御场绘图"],
+    constellations: ["门庭若市", "御风雅韵", "金顶灿光", "百柱盛宴", "圣殿奇藏", "天园理想"]
+  },
+  "kazuha": {
+    talents: ["我流剑术", "千早振", "万叶之一刀"],
+    constellations: ["色厉内荏", "山岚残火", "枫袖奇谭", "大空幻法", "万世集", "血赤红叶"]
+  },
+  "keqing": {
+    talents: ["云来剑法", "星斗归位", "天街巡游"],
+    constellations: ["雷厉", "苛捐", "登阁", "调律", "移灯", "廉贞"]
+  },
+  "kinich": {
+    talents: ["夜阳斗技", "悬猎·游骋高狩", "向伟大圣龙致意"],
+    constellations: ["七鹦之喙", "星虎之掌", "原鳄之爪", "蜂鸟之羽", "吼猴之尾", "瑞兽之形"]
+  },
+  "kirara": {
+    talents: ["箱纸射术", "呜喵町飞脚", "秘法·惊喜特派"],
+    constellations: ["物递流转", "八荒显影", "万界通邮", "韦驮骏足", "千里一日", "沿途百景"]
+  },
+  "klee": {
+    talents: ["砰砰", "蹦蹦炸弹", "轰轰火花"],
+    constellations: ["连环轰隆", "破破弹片", "可莉特调", "一触即发", "轰击之星", "火力全开"]
+  },
+  "kokomi": {
+    talents: ["水有常形", "海月之誓", "海人化羽"],
+    constellations: ["决水于溪", "潮涌于渊", "海渚月舟", "月摄于水", "百川集海", "珊瑚一心"]
+  },
+  "kuki-shinobu": {
+    talents: ["忍流飞刃斩", "越祓草轮", "御咏鸣神刈山祭"],
+    constellations: ["割舍怜悯之心", "割舍侥幸之心", "割舍痛苦之心", "割舍封闭之心", "割舍割舍之心", "割舍软弱之心"]
+  },
+  "layla": {
+    talents: ["熠辉形导箭", "垂裳端凝之夜", "星流摇床之梦"],
+    constellations: ["寰宇遨游", "星火燎原", "长夜行杲", "昭曜星芒", "众生之望", "璨焰华光"]
+  },
+  "lisa": {
+    talents: ["指尖雷暴", "苍雷", "蔷薇的雷光"],
+    constellations: ["无限的电回路", "空间电势结界", "谐振的雷光", "如电的紧迫", "等离态的落雷", "脉冲的蔷薇"]
+  },
+  "lynette": {
+    talents: ["刺击术·改", "谜影障身法", "魔术·变景幻戏"],
+    constellations: ["暗芒流影", "悬谜叠嶂", "视错颠倒", "默会暗通", "遮眼法", "瞰察眼"]
+  },
+  "lyney": {
+    talents: ["势去术·障目", "炫惑光影", "大魔术·灵迹巡游"],
+    constellations: ["空取奇术", "巧言如簧", "心法惑惑", "熟稔落签", "谜底揭晓", "微笑的礼帽"]
+  },
+  "mika": {
+    talents: ["西风枪术·迅捷", "星霜的流旋", "苍翎的颂歌"],
+    constellations: ["遇合的因缘", "交游的旅步", "游击的心得", "晴霜的祝念", "引示的星铃", "依随的策援"]
+  },
+  "mona": {
+    talents: ["因果点破", "水中幻愿", "星命定轨"],
+    constellations: ["沉没的预言", "星月的连珠", "不休的天象", "灭绝的预言", "命运的嘲弄", "厄运的修辞"]
+  },
+  "mualani": {
+    talents: ["降温处理", "踏鲨破浪", "爆瀑飞弹"],
+    constellations: ["悠闲的「梅兹特利」…", "全力以赴玛拉妮！", "在欢乐海上冲浪", "鲨鲨主食是豚豚", "同款冲浪板有售！", "「流泉之众」的精神"]
+  },
+  "nahida": {
+    talents: ["行相", "所闻遍计", "心景幻成"],
+    constellations: ["心识蕴藏之种", "正等善见之根", "熏习成就之芽", "具足正见之茎", "开示悟入之叶", "大辨圆成之果"]
+  },
+  "navia": {
+    talents: ["直聘的礼节", "典仪式晶火", "如霰澄天的鸣礼"],
+    constellations: ["淑女的距离感", "总裁的猎逐", "经营家的广域", "铭誓的从容", "谈判人的坚毅", "老板的机锋"]
+  },
+  "neuvillette": {
+    talents: ["如水的公平", "泪水啊，我必偿还", "潮水啊，我已归来"],
+    constellations: ["尊荣的创定", "律法的诘诫", "寓言的摹写", "怜悯的冠冕", "公义的断制", "忿怒的报偿"]
+  },
+  "nilou": {
+    talents: ["弦月舞步", "七域舞步", "浮莲舞步·远梦聆泉"],
+    constellations: ["却月的轻舞", "星天的花雨", "步月的影迹", "流盼的假寐", "旋绚的华光", "载霜的弦音"]
+  },
+  "ningguang": {
+    talents: ["千金掷", "璇玑屏", "天权崩玉"],
+    constellations: ["璇玑透", "璇玑合", "璇玑晦", "璇玑烁", "璇玑屏", "璇玑"]
+  },
+  "noelle": {
+    talents: ["西风剑术·女仆", "护心铠", "大扫除"],
+    constellations: ["支援就交给我吧", "旋风女仆", "女仆不会受伤", "之后会扫干净的", "骑士团的女仆长", "必须一尘不染"]
+  },
+  "qiqi": {
+    talents: ["云来古剑法", "仙法·寒病鬼差", "仙法·救苦度厄"],
+    constellations: ["凌寒", "冰寒蚀骨", "登仙", "天威压境", "红莲冰", "起死回骸"]
+  },
+  "raiden": {
+    talents: ["源流", "神变·恶曜开眼", "奥义·梦想真说"],
+    constellations: ["凶将显世", "斩铁断金", "愧景庶类", "常春开琼", "凶变显象", "负愿前行"]
+  },
+  "razor": {
+    talents: ["钢脊", "利爪与苍雷", "雷牙"],
+    constellations: ["狼性", "压制", "兽魂", "撕咬", "利爪", "天狼"]
+  },
+  "rosaria": {
+    talents: ["教会剑术", "噬罪的告解", "终命的圣礼"],
+    constellations: ["罪之导引", "福祸相依", "告解之仪", "苦痛恩典", "临终祈礼", "代行裁判"]
+  },
+  "sara": {
+    talents: ["天狗传弓术", "鸦羽天狗霆雷召咒", "煌煌千道镇式"],
+    constellations: ["乌眼", "鸦羽", "心魔", "彻证", "咒詈", "我界"]
+  },
+  "sayu": {
+    talents: ["见习忍法·影投射", "呜呼流·风隐急进", "呜呼流·影貉缭乱"],
+    constellations: ["一心二用之术", "理来说欠揍", "这,这,这", "偷懒的新方法", "快,正是休息时间", "睡眠无敌"]
+  },
+  "sethos": {
+    talents: ["王门铳术", "湛影祭仪", "古仪·鸣砂玄弹"],
+    constellations: ["铭心的巡礼", "秘仪的默言", "日月的告谕", "谒见的恩颂", "圣卷的僭礼", "王威的历辩"]
+  },
+  "shenhe": {
+    talents: ["踏辰摄斗", "仰灵威召将役咒", "神女遣灵真诀"],
+    constellations: ["心斋", "定蒙", "潜虚", "洞观", "化神", "忘玄"]
+  },
+  "shikanoin-heizou": {
+    talents: ["格斗·禁式", "戮心拳", "聚风蹴"],
+    constellations: ["名侦探的推理", "真探", "暗号隐语", "无言的示踪书", "四方之密室", "奇想天外之捜査録"]
+  },
+  "sigewinne": {
+    talents: ["靶位训练", "疗愈·常规多弹", "饱和·饱和重混"],
+    constellations: ["最开心的快乐增压", "最慈悲的减伤梯度", "最稳定的阻凝器", "最润泽的泵", "最优化的增量比率", "最崇高的治愈之心"]
+  },
+  "sucrose": {
+    talents: ["简式风灵创造", "风灵作成·陆叁零捌", "禁·风灵作成·柒伍同构贰型"],
+    constellations: ["堆叠真空域", "不羁型贝特", "零失误少女", "炼金的执着", "认真普通瓶", "混沌熵"]
+  },
+  "tartaglia": {
+    talents: ["断雨", "魔王武装·狂澜", "极恶技·尽灭闪"],
+    constellations: ["魔王武装·遏浪", "魔王武装·暗流", "深渊之灾·纷争涡源", "深渊之灾·舒流", "极恶技·斩水斩雨", "极恶技·天使灭尽"]
+  },
+  "thoma": {
+    talents: ["迅破枪势", "烈烧佑命之侍", "真红炽火之大铠"],
+    constellations: ["同袍的义理", "随从的僚机", "铠袖的缘由", "家臣的方略", "野火的豪烈", "燃烧的诚心"]
+  },
+  "tighnari": {
+    talents: ["藏蕴破障", "识果种雷", "造生·缠藤箭"],
+    constellations: ["始根初步", "茎脉分析", "株距量定", "叶荣知落", "识诸繁芜", "灼果论述"]
+  },
+  "venti": {
+    talents: ["神代射术", "高天之歌", "风神之诗"],
+    constellations: ["箭驻风", "眷恋的泠风", "千风的记忆", "自由的凛风", "高天的协奏", "抗争的暴风"]
+  },
+  "wanderer": {
+    talents: ["业风·羽踏", "羽画·风姿华歌", "狂言·式乐五番"],
+    constellations: ["初番·茂风流羽行", "二番·箙岛廓白浪", "三番·久世舞夕颜", "四番·花月歌浮舟", "五番·久世梦华", "六番·大障"]
+  },
+  "wriothesley": {
+    talents: ["迅烈倾霜", "冰牙突驰", "黑金狼噬"],
+    constellations: ["为恶者施以恶行", "囚徒本囚", "惩与罚的骗局", "王与王的血宴", "公道与公理之诉", "罪与罪的报偿"]
+  },
+  "xiangling": {
+    talents: ["中餐料理", "锅巴出击", "旋火轮"],
+    constellations: ["外酥里嫩", "大火宽油", "武火急烹", "文火慢煨", "锅巴凶猛", "大龙卷"]
+  },
+  "xianyun": {
+    talents: ["清风散花词", "朝起鹤云", "暮集竹星"],
+    constellations: ["借风洗尘", "鹤唳远闻", "云游山海", "偶得妙趣", "旋步霞蔚", "知是留云"]
+  },
+  "xiao": {
+    talents: ["卷积微尘", "风轮两立", "靖妖傩舞"],
+    constellations: ["坏劫·毁坏三界", "空劫·虚空华敷", "降魔·忿怒显相", "神通·空中自在", "成劫·无明增长", "降魔·护法夜叉"]
+  },
+  "xingqiu": {
+    talents: ["古华剑法", "古华剑·画雨笼山", "古华剑·裁雨留虹"],
+    constellations: ["重帘留香", "万顷甘露", "织诗成锦", "孤舟斩蛟", "雨深闭门", "万文集"]
+  },
+  "xinyan": {
+    talents: ["炎舞", "热情拂扫", "叛逆刮弦"],
+    constellations: ["绝命的加速", "即兴开路曲", "焖蒸之舞", "节奏狂暴", "安可的高呼", "地狱里摇滚"]
+  },
+  "yae-miko": {
+    talents: ["狐灵食罪式", "野干役咒·杀生樱", "大密法·天狐显真"],
+    constellations: ["野狐供真篇", "望月之吼哕", "七化之妙境", "绯樱诱雷章", "暴恶嗤笑面", "大祓词"]
+  },
+  "yanfei": {
+    talents: ["火漆制印", "律火迢迢", "丹书立约"],
+    constellations: ["占理不饶人", "最终解释权", "真火炼宝印", "丹书铁券", "遵纪守法", "签了它"]
+  },
+  "yaoyao": {
+    talents: ["颠扑连环枪", "云台团团降芦菔", "月桂·抛掷远遥"],
+    constellations: ["妙受琼门", "正思无邪", "键善行", "爱", "恻隐", "慈惠"]
+  },
+  "yelan": {
+    talents: ["潜形隐曜弓", "萦络纵命索", "渊图玲珑骰"],
+    constellations: ["与谋者", "入彀者", "晃盅者", "诓骗者", "笼钓者", "取胜者"]
+  },
+  "yoimiya": {
+    talents: ["烟火打扬", "琉金云间草", "琉金尽染"],
+    constellations: ["赤玉琉金", "万灯映火", "鼠戏花火", "花呗千灯", "真宵狂走", "长野原龙势流星群"]
+  },
+  "yun-jin": {
+    talents: ["拂云出手", "旋云开相", "破嶂见旌仪"],
+    constellations: ["飞身步", "诸般切末", "牙纛探海", "昇堂吊云", "天涯独俏", "庄谐并举"]
+  },
+  "zhongli": {
+    talents: ["岩雨", "地心", "天星"],
+    constellations: ["岩者，六合引之为骨", "石者，八荒韫玉而明", "圭璋，暝仍不移其晖", "黄琮，破而不夺其坚", "苍璧，驱之长昭天理", "金玉，礼予天地四方"]
+  }
+};
+
+// ─── Chinese Talent Descriptions ───
+const ZH_SKILLS = {
+  "albedo": {
+    descs: [
+      "普通攻击·进行至多五段的连续剑击。重击·消耗一定体力，瞬间向前方挥出两剑。下落攻击·从空中下坠冲击地面，攻击下落路径上的敌人，并在落地时造成范围伤害。",
+      "阿贝多创造一朵「阳华」，造成岩元素范围伤害。阳华存在期间，其领域内的敌人受到攻击时，将生成刹那之花，绽放后造成岩元素范围伤害。",
+      "岩晶在阿贝多的指令下涌动爆发，在前方造成岩元素范围伤害。若场上存在阿贝多自己创造的阳华，则会在阳华领域内生成七朵生灭之花，绽放后造成岩元素范围伤害。",
+    ]
+  },
+  "alhaitham": {
+    descs: [
+      "普通攻击·进行至多五段的连续剑击。重击·消耗一定体力，瞬间向前方挥出两剑。下落攻击·从空中下坠冲击地面，攻击下落路径上的敌人，并在落地时造成范围伤害。",
+      "艾尔海森迅速突进，在突进结束时进行琢光镜攻击，造成草元素伤害。长按时将以不同的方式施放。",
+      "艾尔海森创造殊境·显象结缚，造成草元素范围伤害。若施放时已持有琢光镜，则所有琢光镜将消耗并提升伤害。",
+    ]
+  },
+  "aloy": {
+    descs: [
+      "普通攻击·进行至多四段的连续弓箭射击。重击·进行伤害更高、更为精准的瞄准射击。瞄准时，冰元素会持续汇聚在箭矢上。",
+      "阿洛伊掷出一枚冰尘弹，投掷物命中后造成冰元素伤害，并分裂成多个冰尘弹，触碰到或命中敌人后造成冰元素伤害。",
+      "阿洛伊投掷一个冰元素引爆装置，造成冰元素范围伤害，并扩散出冰元素冲击波。",
+    ]
+  },
+  "amber": {
+    descs: [
+      "普通攻击·进行至多五段的连续弓箭射击。重击·进行伤害更高、更为精准的瞄准射击。瞄准时，火元素会持续汇聚在箭矢上。",
+      "召唤兔兔伯爵。兔兔伯爵会持续嘲讽周围的敌人，吸引他们攻击。兔兔伯爵的生命值上限受益于安柏的生命值上限。",
+      "射出大量箭雨，对前方区域持续进行火元素射击，并造成火元素范围伤害。",
+    ]
+  },
+  "arataki-itto": {
+    descs: [
+      "普通攻击·进行至多四段的连续挥砍。重击·长按持续消耗体力，进行连续的左一右一袈裟斩。下落攻击·从空中下坠冲击地面，攻击下落路径上的敌人并在落地时造成范围伤害。",
+      "抛出赤牛「阿丑」，命中敌人时造成岩元素伤害。阿丑被视为岩元素创造物，会嘲讽周围敌人并持续拍击地面造成岩元素伤害。",
+      "荒泷一斗解放「鬼王」之形，以不坏之金钢身战斗。在此期间攻击具有无法被阻挡的岩元素特性，攻击伤害基于荒泷一斗的防御力。",
+    ]
+  },
+  "arlecchino": {
+    descs: [
+      "普通攻击·进行至多四段的连续枪击。重击·消耗一定体力向前突进。下落攻击·从空中下坠冲击地面，攻击下落路径上的敌人并在落地时造成范围伤害。",
+      "阿蕾奇诺释放「万相化灰」，向前方造成火元素伤害，并清除一定范围内的「血偿勒令」。",
+      "阿蕾奇诺展翅腾空，释放「厄月将升」，造成大范围火元素伤害，并重置元素战技的冷却时间。",
+    ]
+  },
+  "ayaka": {
+    descs: [
+      "普通攻击·进行至多五段的连续剑击。重击·消耗一定体力，向前方释放连续的居合斩。下落攻击·从空中下坠冲击地面，攻击下落路径上的敌人，并在落地时造成范围伤害。",
+      "神里绫华唤出冰华，将周围敌人击飞并造成冰元素范围伤害。",
+      "神里绫华召唤出「霜见雪关扉」，持续对范围内的敌人造成冰元素伤害。",
+    ]
+  },
+  "ayato": {
+    descs: [
+      "普通攻击·进行至多五段的连续剑击。重击·消耗一定体力，向前方斩出一刀。下落攻击·从空中下坠冲击地面，攻击下落路径上的敌人，并在落地时造成范围伤害。",
+      "神里绫人瞬间移动并进入「泷廻鉴花」状态，在此状态下使用瞬水剑进行快速连续攻击，造成水元素伤害。",
+      "神里绫人降下「清泷之囿」，在范围内不断降下水花剑，对范围内的敌人持续造成水元素伤害。",
+    ]
+  },
+  "baizhu": {
+    descs: [
+      "普通攻击·进行至多四段的连续攻击。重击·消耗一定体力，向前方突进。下落攻击·从空中下坠冲击地面，攻击下落路径上的敌人并在落地时造成范围伤害。",
+      "白术驱使游丝徵灵攻击附近的敌人，造成草元素伤害。游丝徵灵返回后为附近角色恢复生命值。",
+      "白术进入「脉摄宣明」状态，产生无郤气幕盾，每2.5秒释放灵气波，对敌人造成草元素伤害并为当前场上角色恢复生命值。",
+    ]
+  },
+  "barbara": {
+    descs: [
+      "普通攻击·进行至多三段的连续水珠攻击。重击·消耗一定体力，短暂咏唱后造成水元素范围伤害。下落攻击·从空中下坠冲击地面，攻击下落路径上的敌人并在落地时造成范围伤害。",
+      "芭芭拉唤起歌声，召唤水珠环绕自身，为当前场上角色恢复生命值，并对接触水珠的敌人附加潮湿状态。",
+      "芭芭拉为周围友军恢复大量生命值。",
+    ]
+  },
+  "beidou": {
+    descs: [
+      "普通攻击·进行至多五段的连续剑击。重击·消耗一定体力，快速进行连续斩击。下落攻击·从空中下坠冲击地面，攻击下落路径上的敌人，并在落地时造成范围伤害。",
+      "北斗架起雷盾，并召唤雷兽。受到伤害时，斩出雷兽之影对敌人造成雷元素伤害。完美格挡时，斩出的雷兽之影伤害更高。",
+      "北斗召唤雷电巨兽，造成雷元素范围伤害，并在周围引发雷涌，对附近的敌人造成雷元素伤害。",
+    ]
+  },
+  "bennett": {
+    descs: [
+      "普通攻击·进行至多五段的连续剑击。重击·消耗一定体力旋转攻击。下落攻击·从空中下坠冲击地面，攻击下落路径上的敌人并在落地时造成范围伤害。",
+      "班尼特向目标飞出带有火元素的踢腿攻击，将敌人击飞。长按可积蓄力量，造成火元素范围伤害。",
+      "班尼特向前方跳跃，造成火元素伤害，并展开「鼓舞领域」，领域内的角色获得攻击力加成，且生命值低于70%时持续恢复生命值。",
+    ]
+  },
+  "candace": {
+    descs: [
+      "普通攻击·进行至多四段的连续枪击。重击·消耗一定体力向前突进。下落攻击·从空中下坠冲击地面，攻击下落路径上的敌人并在落地时造成范围伤害。",
+      "坎蒂丝举起盾牌进行防御，防御时可以抵御敌人的攻击。长按状态结束时，会向前方劈出苍鹭震击，造成水元素伤害。",
+      "坎蒂丝高举武器，引发「赤沙潮涌」对周围敌人造成水元素范围伤害，并赋予附近角色「赤沙加护」状态，使普通攻击造成水元素伤害。",
+    ]
+  },
+  "charlotte": {
+    descs: [
+      "普通攻击·进行至多三段的连续攻击，造成物理伤害。重击·消耗一定体力进行瞄准射击。下落攻击·从空中下坠冲击地面，攻击下落路径上的敌人并在落地时造成范围伤害。",
+      "夏洛蒂使用「取景·冰点构图法」对前方敌人造成冰元素范围伤害，并为命中的敌人施加「瞬时剪影」标记，持续为队伍恢复生命值。",
+      "夏洛蒂展开「定格·全方位印证」，对敌人造成冰元素伤害，并为队伍恢复生命值。",
+    ]
+  },
+  "chevreuse": {
+    descs: [
+      "普通攻击·进行至多四段的连续枪击。重击·消耗一定体力向前突进。下落攻击·从空中下坠冲击地面，攻击下落路径上的敌人并在落地时造成范围伤害。",
+      "夏沃蕾装填弹药并向敌人射击，造成火元素范围伤害。短按为快速射击，长按为精准射击。",
+      "夏沃蕾发射一颗爆轰弹，造成火元素范围伤害，并分裂成多枚子弹进行二次攻击。",
+    ]
+  },
+  "chiori": {
+    descs: [
+      "普通攻击·进行至多五段的连续剑击。重击·消耗一定体力进行交叉斩击。下落攻击·从空中下坠冲击地面，攻击下落路径上的敌人并在落地时造成范围伤害。",
+      "千织向前滑步并挥出「裁锦」，造成岩元素伤害。若长按则进入瞄准状态，向目标方向突进造成岩元素伤害。",
+      "千织展开双刀，施展「二刀之型·比翼」，对前方敌人造成岩元素范围伤害，并在场上留下「绢」协助战斗。",
+    ]
+  },
+  "chongyun": {
+    descs: [
+      "普通攻击·进行至多四段的连续剑击。重击·消耗一定体力旋转攻击。下落攻击·从空中下坠冲击地面，攻击下落路径上的敌人并在落地时造成范围伤害。",
+      "重云挥舞巨剑猛击地面，在前方造成冰元素范围伤害。随后在脚下展开冰霜领域，使领域内的角色获得冰元素附魔。",
+      "重云唤出三柄灵刃，轮流劈向敌人造成冰元素范围伤害，并击飞敌人。",
+    ]
+  },
+  "clorinde": {
+    descs: [
+      "普通攻击·进行至多四段的连续剑击。重击·消耗一定体力向前突进。下落攻击·从空中下坠冲击地面，攻击下落路径上的敌人并在落地时造成范围伤害。",
+      "克洛琳德进入「狩夜」状态，以迅捷的剑术进行多次突刺攻击，并提升抗打断能力。每次攻击命中敌人时恢复生命值。",
+      "克洛琳德释放终结一击「残光将终」，造成雷元素范围伤害。若拥有「猎影之契」，则消耗其层数提升伤害并为自身恢复生命值。",
+    ]
+  },
+  "collei": {
+    descs: [
+      "普通攻击·进行至多四段的连续弓箭射击。重击·进行伤害更高、更为精准的瞄准射击。瞄准时，草元素会持续汇聚在箭矢上。",
+      "柯莱投掷出「拂花淬叶箭」，命中敌人时造成草元素伤害，并分裂成多枚淬叶箭造成额外草元素伤害。",
+      "柯莱将「猫猫秘宝」抛向空中，造成草元素范围伤害，并在地面形成草元素领域，持续对领域内的敌人造成草元素伤害。",
+    ]
+  },
+  "cyno": {
+    descs: [
+      "普通攻击·进行至多四段的连续枪击。重击·消耗一定体力向前突进。下落攻击·从空中下坠冲击地面，攻击下落路径上的敌人并在落地时造成范围伤害。",
+      "赛诺进行迅速的突刺，造成雷元素伤害。长按则腾空而起向下猛击，造成雷元素范围伤害。",
+      "赛诺解放神之眼的力量进入「圣仪·煅魂」状态，将普通攻击转化为不可被附魔覆盖的雷元素伤害，并提升元素精通。",
+    ]
+  },
+  "dehya": {
+    descs: [
+      "普通攻击·进行至多五段的连续剑击。重击·消耗一定体力快速连续斩击。下落攻击·从空中下坠冲击地面，攻击下落路径上的敌人，并在落地时造成范围伤害。",
+      "迪希雅展开「熔铁流狱」，造成火元素范围伤害。随后生成「净焰剑狱」领域，领域内敌人受到伤害时，触发协同攻击。",
+      "迪希雅释放「炎啸狮咬」，造成火元素范围伤害，并在地上留下「狮焰」领域，持续灼烧敌人。",
+    ]
+  },
+  "diluc": {
+    descs: [
+      "普通攻击·进行至多四段的连续剑击。重击·消耗一定体力快速连续斩击。下落攻击·从空中下坠冲击地面，攻击下落路径上的敌人，并在落地时造成范围伤害。",
+      "迪卢克挥出向前斩击的火元素伤害。连续使用此技能可进行最多三次的连续攻击。",
+      "迪卢克爆发烈焰之力，向前方释放巨大的火鸟，对路径上的敌人造成大量火元素伤害，并附魔普通攻击为火元素。",
+    ]
+  },
+  "diona": {
+    descs: [
+      "普通攻击·进行至多五段的连续弓箭射击。重击·进行伤害更高、更为精准的瞄准射击。瞄准时，冰元素会持续汇聚在箭矢上。",
+      "迪奥娜发射冻冻猫爪，命中敌人时造成冰元素伤害并生成护盾。护盾吸收量受益于迪奥娜的生命值上限。",
+      "迪奥娜抛出特调冰酿，造成冰元素范围伤害，并展开冰雾领域，为领域内的角色恢复生命值并降低敌人的攻击力。",
+    ]
+  },
+  "dori": {
+    descs: [
+      "普通攻击·进行至多三段的连续剑击。重击·消耗一定体力快速连续斩击。下落攻击·从空中下坠冲击地面，攻击下落路径上的敌人并在落地时造成范围伤害。",
+      "多莉发射「镇灵之灯·烦恼解决炮」，对敌人造成雷元素伤害。命中后产生断连弹药，造成雷元素伤害。",
+      "多莉连接「卡萨扎莱宫的无微不至」，为当前场上角色恢复生命值和元素能量。",
+    ]
+  },
+  "emilie": {
+    descs: [
+      "普通攻击·进行至多四段的连续枪击。重击·消耗一定体力向前突进。下落攻击·从空中下坠冲击地面，攻击下落路径上的敌人并在落地时造成范围伤害。",
+      "艾梅莉埃放置「撷萃调香」装置，对敌人造成草元素伤害，并持续对敌人施加草元素附着。",
+      "艾梅莉埃释放「香氛演绎」，引发大范围的香氛爆发，造成草元素范围伤害，并生成持续造成草元素伤害的领域。",
+    ]
+  },
+  "eula": {
+    descs: [
+      "普通攻击·进行至多五段的连续剑击。重击·消耗一定体力快速连续斩击。下落攻击·从空中下坠冲击地面，攻击下落路径上的敌人，并在落地时造成范围伤害。",
+      "优菈向前方挥出寒冰之刃，造成冰元素伤害，并为自身叠加冷酷之心层数，提升防御力和抗打断能力。",
+      "优菈挥出「凝浪之光剑」，对前方敌人造成冰元素范围伤害，并召唤一柄光剑跟随自己，光剑在结束后爆发造成物理伤害。",
+    ]
+  },
+  "faruzan": {
+    descs: [
+      "普通攻击·进行至多四段的连续弓箭射击。重击·进行伤害更高、更为精准的瞄准射击。瞄准时，风元素会持续汇聚在箭矢上。",
+      "珐露珊释放「非想风天」，向前方释放风球，造成风元素范围伤害，并牵引进攻敌人。",
+      "珐露珊布下「抟风秘道」，造成风元素范围伤害，并提升附近角色的风元素伤害。",
+    ]
+  },
+  "fischl": {
+    descs: [
+      "普通攻击·进行至多五段的连续弓箭射击。重击·进行伤害更高、更为精准的瞄准射击。瞄准时，雷元素会持续汇聚在箭矢上。",
+      "菲谢尔召唤奥兹。奥兹会持续攻击附近的敌人，造成雷元素伤害。长按可调整奥兹的召唤位置。",
+      "菲谢尔召唤奥兹之翼，协防周围敌人造成雷元素伤害。",
+    ]
+  },
+  "freminet": {
+    descs: [
+      "普通攻击·进行至多四段的连续剑击。重击·消耗一定体力旋转攻击。下落攻击·从空中下坠冲击地面，攻击下落路径上的敌人并在落地时造成范围伤害。",
+      "菲米尼挥剑上挑，造成冰元素伤害。长按时持续挥剑，提高「高压」层数，并提升普通攻击造成的冰元素伤害。",
+      "菲米尼释放「猎影潜袭」，造成冰元素范围伤害，并重置元素战技的冷却时间。",
+    ]
+  },
+  "furina": {
+    descs: [
+      "普通攻击·进行至多四段的连续剑击。重击·消耗一定体力旋转攻击。下落攻击·从空中下坠冲击地面，攻击下落路径上的敌人并在落地时造成范围伤害。",
+      "芙宁娜根据当前「芒」或「荒」形态，召唤不同的沙龙成员协助战斗，造成水元素伤害或为角色恢复生命值。",
+      "芙宁娜引发「万众狂欢」，造成水元素范围伤害，并根据附近角色的生命值变化提升造成的伤害或治疗效果。",
+    ]
+  },
+  "gaming": {
+    descs: [
+      "普通攻击·进行至多四段的连续剑击。重击·消耗一定体力旋转攻击。下落攻击·从空中下坠冲击地面，攻击下落路径上的敌人并在落地时造成范围伤害。",
+      "嘉明向前方扑击，造成火元素伤害。命中敌人后获得「瑞兽之形」，提升下一次普通攻击的伤害。",
+      "嘉明释放「瑞兽降世」，召唤瑞兽向前方冲锋，造成火元素范围伤害。",
+    ]
+  },
+  "ganyu": {
+    descs: [
+      "普通攻击·进行至多六段的连续弓箭射击。重击·进行伤害更高、更为精准的瞄准射击。瞄准时，冰元素会持续汇聚在箭矢上，蓄力完成后造成冰元素伤害。",
+      "甘雨向后腾跃，留下一朵冰莲，对周围敌人造成冰元素伤害。冰莲会持续嘲讽周围敌人。",
+      "甘雨凝聚霜华，召唤出冰灵珠，对范围内的敌人持续降下冰棱，造成冰元素伤害。",
+    ]
+  },
+  "gorou": {
+    descs: [
+      "普通攻击·进行至多四段的连续弓箭射击。重击·进行伤害更高、更为精准的瞄准射击。瞄准时，岩元素会持续汇聚在箭矢上。",
+      "五郎向后跳跃并射出一发犬坂箭，造成岩元素范围伤害。在场上展开「大将威仪」领域，提升附近角色的防御力。",
+      "五郎释放「兽牙逐突形胜战法」，造成岩元素范围伤害并展开领域，提升附近角色的岩元素伤害。",
+    ]
+  },
+  "hu-tao": {
+    descs: [
+      "普通攻击·进行至多六段的连续枪击。重击·消耗一定体力向前突进。下落攻击·从空中下坠冲击地面，攻击下落路径上的敌人并在落地时造成范围伤害。",
+      "胡桃消耗部分生命值，进入「彼岸蝶舞」状态，将普通攻击转化为火元素伤害，并基于生命值上限提升攻击力。",
+      "胡桃挥动武器，对周围敌人造成火元素范围伤害。命中敌人时为自身恢复生命值。",
+    ]
+  },
+  "jean": {
+    descs: [
+      "普通攻击·进行至多五段的连续剑击。重击·消耗一定体力将敌人举起。下落攻击·从空中下坠冲击地面，攻击下落路径上的敌人，并在落地时造成范围伤害。",
+      "琴汇聚风元素的力量，将敌人牵引至面前并击飞，造成风元素伤害。",
+      "琴召唤蒲公英之风，造成风元素范围伤害，并为队伍中的所有角色恢复大量生命值。",
+    ]
+  },
+  "kachina": {
+    descs: [
+      "普通攻击·进行至多四段的连续枪击。重击·消耗一定体力旋转攻击。下落攻击·从空中下坠冲击地面，攻击下落路径上的敌人并在落地时造成范围伤害。",
+      "卡齐娜骑乘「冲天转转」，向前方冲刺造成岩元素伤害并进入夜魂加持状态。",
+      "卡齐娜进入「认真时间」状态，造成岩元素范围伤害，并提升队伍中附近角色的普通攻击伤害。",
+    ]
+  },
+  "kaeya": {
+    descs: [
+      "普通攻击·进行至多五段的连续剑击。重击·消耗一定体力快速连续斩击。下落攻击·从空中下坠冲击地面，攻击下落路径上的敌人并在落地时造成范围伤害。",
+      "凯亚释放冰棱，对前方敌人造成冰元素伤害。长按可瞄准射程。",
+      "凯亚召唤三枚冰棱围绕自身旋转，持续对周围的敌人造成冰元素伤害。",
+    ]
+  },
+  "kaveh": {
+    descs: [
+      "普通攻击·进行至多四段的连续剑击。重击·消耗一定体力旋转攻击。下落攻击·从空中下坠冲击地面，攻击下落路径上的敌人并在落地时造成范围伤害。",
+      "卡维将「梅赫拉克」作为绘图工具发射，造成草元素伤害，并标记命中的敌人。",
+      "卡维释放「御场绘图」，造成草元素范围伤害，并在地面留下「天园」领域，持续对领域内的敌人造成草元素伤害。",
+    ]
+  },
+  "kazuha": {
+    descs: [
+      "普通攻击·进行至多五段的连续剑击。重击·消耗一定体力快速连续斩击。下落攻击·从空中下坠冲击地面，攻击下落路径上的敌人，并在落地时造成范围伤害。",
+      "枫原万叶凝聚风元素之力腾空而起，将周围的敌人牵引至身边并击飞，造成风元素伤害。",
+      "枫原万叶使出奥义「万叶之一刀」，造成大范围风元素伤害。技能命中敌人后会根据扩散的元素触发对应的元素伤害加成。",
+    ]
+  },
+  "keqing": {
+    descs: [
+      "普通攻击·进行至多五段的连续剑击。重击·消耗一定体力快速连续斩击。下落攻击·从空中下坠冲击地面，攻击下落路径上的敌人，并在落地时造成范围伤害。",
+      "刻晴投出雷楔，对敌人造成雷元素伤害。雷楔存在期间，再次施放或使用重击可瞬间移动至敌人位置并造成雷元素伤害。",
+      "刻晴爆发雷霆之力，对周围敌人造成雷元素范围伤害，并提升暴击率和元素充能效率。",
+    ]
+  },
+  "kinich": {
+    descs: [
+      "普通攻击·进行至多四段的连续剑击。重击·消耗一定体力快速攻击。下落攻击·从空中下坠冲击地面，攻击下落路径上的敌人并在落地时造成范围伤害。",
+      "基尼奇发射钩索进行机动攻击，造成草元素伤害。长按可进行瞄准，发射后对命中的敌人造成草元素伤害。",
+      "基尼奇召唤「伟大圣龙」的力量，造成大范围草元素伤害。",
+    ]
+  },
+  "kirara": {
+    descs: [
+      "普通攻击·进行至多四段的连续攻击。重击·消耗一定体力进行上挑攻击。下落攻击·从空中下坠冲击地面，攻击下落路径上的敌人并在落地时造成范围伤害。",
+      "绮良良化身「猫箱快递」形态，可快速移动和攀爬，接触敌人时造成草元素伤害。",
+      "绮良良发送「惊喜特派」包裹，造成草元素范围伤害，并分裂成弹跳豆包对敌人造成草元素伤害。",
+    ]
+  },
+  "klee": {
+    descs: [
+      "普通攻击·进行至多三段的连续投掷炸弹攻击。重击·消耗一定体力瞄准后投掷炸弹。下落攻击·从空中下坠冲击地面，攻击下落路径上的敌人并在落地时造成范围伤害。",
+      "可莉投掷「蹦蹦炸弹」，弹跳后分裂成多个炸弹，每次碰撞或接触敌人后造成火元素范围伤害。",
+      "可莉召唤「轰轰火花」，持续对周围的敌人造成火元素伤害。",
+    ]
+  },
+  "kokomi": {
+    descs: [
+      "普通攻击·进行至多三段的连续水元素攻击。重击·消耗一定体力进行水弹攻击。下落攻击·从空中下坠冲击地面，攻击下落路径上的敌人并在落地时造成范围伤害。",
+      "珊瑚宫心海召唤「化海月」，对周围敌人造成水元素伤害，并为附近的角色恢复生命值。",
+      "珊瑚宫心海穿上「海人化羽」武装，提升普通攻击、重击的伤害，并为附近的角色恢复生命值。",
+    ]
+  },
+  "kuki-shinobu": {
+    descs: [
+      "普通攻击·进行至多三段的连续剑击。重击·消耗一定体力快速连续斩击。下落攻击·从空中下坠冲击地面，攻击下落路径上的敌人并在落地时造成范围伤害。",
+      "久岐忍创造越祓草轮，消耗部分生命值，草轮会跟随当前场上角色，持续对周围的敌人造成雷元素伤害。",
+      "久岐忍将武器刺入地面，在前方创造雷草结界，造成雷元素范围伤害。",
+    ]
+  },
+  "layla": {
+    descs: [
+      "普通攻击·进行至多三段的连续剑击。重击·消耗一定体力旋转攻击。下落攻击·从空中下坠冲击地面，攻击下落路径上的敌人并在落地时造成范围伤害。",
+      "莱依拉释放「垂裳端凝之夜」，生成护盾，并召唤晚星攻击敌人造成冰元素伤害。",
+      "莱依拉释放「星流摇床之梦」，对周围敌人造成冰元素范围伤害，并召唤天上降下的星光持续攻击敌人。",
+    ]
+  },
+  "lisa": {
+    descs: [
+      "普通攻击·进行至多四段的连续雷元素攻击。重击·消耗一定体力，短暂咏唱后造成雷元素范围伤害。下落攻击·从空中下坠冲击地面，攻击下落路径上的敌人并在落地时造成范围伤害。",
+      "丽莎召唤苍雷，对附近的敌人造成雷元素伤害。长按时会积蓄力量，造成更大的雷元素范围伤害。",
+      "丽莎召唤蔷薇的雷光，对周围的敌人造成大量雷元素伤害。",
+    ]
+  },
+  "lynette": {
+    descs: [
+      "普通攻击·进行至多四段的连续剑击。重击·消耗一定体力快速连续斩击。下落攻击·从空中下坠冲击地面，攻击下落路径上的敌人并在落地时造成范围伤害。",
+      "琳妮特向前方挥出刺击，造成风元素伤害，并留下「谜影」标记。长按可瞄准。",
+      "琳妮特释放「魔术·变景幻戏」，造成风元素范围伤害，并召唤一个猫箱盒嘲讽敌人。",
+    ]
+  },
+  "lyney": {
+    descs: [
+      "普通攻击·进行至多四段的连续弓箭射击。重击·进行伤害更高、更为精准的瞄准射击。瞄准时，火元素会持续汇聚在箭矢上。",
+      "林尼释放「炫惑光影」，造成火元素伤害，并留下一个「笑猫帽」，持续嘲讽周围的敌人。",
+      "林尼释放「大魔术·灵迹巡游」，造成火元素范围伤害，并引爆场上的「笑猫帽」造成额外的火元素伤害。",
+    ]
+  },
+  "mika": {
+    descs: [
+      "普通攻击·进行至多五段的连续枪击。重击·消耗一定体力向前突进。下落攻击·从空中下坠冲击地面，攻击下落路径上的敌人并在落地时造成范围伤害。",
+      "米卡举起十字弓射击，为附近的角色恢复生命值。长按可进行瞄准。",
+      "米卡释放「苍翎的颂歌」，为队伍中的角色恢复生命值，并提升普通攻击速度。",
+    ]
+  },
+  "mona": {
+    descs: [
+      "普通攻击·进行至多四段的连续水元素攻击。重击·消耗一定体力，短暂咏唱后造成水元素范围伤害。下落攻击·从空中下坠冲击地面，攻击下落路径上的敌人并在落地时造成范围伤害。",
+      "莫娜唤出「水中幻愿」，凝聚水元素之力，造成水元素范围伤害，并留下幻影嘲弄敌人。",
+      "莫娜召唤「星命定轨」，对周围的敌人施加泡影状态，并造成水元素伤害。",
+    ]
+  },
+  "mualani": {
+    descs: [
+      "普通攻击·进行至多四段的连续攻击。重击·消耗一定体力旋转攻击。下落攻击·从空中下坠冲击地面，攻击下落路径上的敌人并在落地时造成范围伤害。",
+      "玛拉妮骑乘冲浪板冲刺，对前方的敌人造成水元素伤害。",
+      "玛拉妮释放「爆瀑飞弹」，向前方投掷水弹，造成水元素范围伤害。",
+    ]
+  },
+  "nahida": {
+    descs: [
+      "普通攻击·进行至多四段的连续攻击，造成草元素伤害。重击·消耗一定体力进行瞄准射击。下落攻击·从空中下坠冲击地面，攻击下落路径上的敌人并在落地时造成范围伤害。",
+      "纳西妲释放「所闻遍计」，对敌人造成草元素伤害，并连接附近的敌人。触发元素反应时造成额外的草元素伤害。",
+      "纳西妲展开「心景幻成」，造成草元素范围伤害，并在场上展开领域。领域内的角色获得元素精通提升。",
+    ]
+  },
+  "navia": {
+    descs: [
+      "普通攻击·进行至多四段的连续剑击。重击·消耗一定体力旋转攻击。下落攻击·从空中下坠冲击地面，攻击下落路径上的敌人并在落地时造成范围伤害。",
+      "娜维娅召唤「典仪式晶火伞」，向目标射击，造成岩元素伤害。",
+      "娜维娅释放「如霰澄天的鸣礼」，召唤华丽的礼炮轰炸，造成岩元素范围伤害。",
+    ]
+  },
+  "neuvillette": {
+    descs: [
+      "普通攻击·进行至多三段的连续攻击。重击·消耗一定体力进行「重击·衡平审判」，进入蓄力状态，造成水元素范围伤害。下落攻击·从空中下坠冲击地面。",
+      "那维莱特释放「泪水啊，我必偿还」，造成水元素范围伤害，并为自身恢复生命值。",
+      "那维莱特释放「潮水啊，我已归来」，造成大范围水元素伤害。",
+    ]
+  },
+  "nilou": {
+    descs: [
+      "普通攻击·进行至多三段的连续剑击。重击·消耗一定体力旋转攻击。下落攻击·从空中下坠冲击地面，攻击下落路径上的敌人并在落地时造成范围伤害。",
+      "妮露进入「翩转」状态，使用水元素剑术攻击敌人，对敌人造成水元素伤害。",
+      "妮露展示「浮莲舞步·远梦聆泉」，造成水元素范围伤害，并生成「水环」跟随当前场上角色。",
+    ]
+  },
+  "ningguang": {
+    descs: [
+      "普通攻击·发射宝石，造成岩元素伤害。重击·消耗一定体力发射一枚巨型宝石。下落攻击·从空中下坠冲击地面，攻击下落路径上的敌人并在落地时造成范围伤害。",
+      "凝光召出璇玑屏，阻挡敌人的投射物并造成岩元素范围伤害。",
+      "凝光召唤大量宝石在身边集结，然后同时发射攻击，造成大量岩元素伤害。",
+    ]
+  },
+  "noelle": {
+    descs: [
+      "普通攻击·进行至多四段的连续剑击。重击·消耗一定体力旋转攻击。下落攻击·从空中下坠冲击地面，攻击下落路径上的敌人并在落地时造成范围伤害。",
+      "诺艾尔展开护盾，吸收伤害并提升抗打断能力。护盾的吸收量基于诺艾尔的防御力。",
+      "诺艾尔将武器的巨大化，以更大的攻击范围进行岩元素攻击，伤害基于诺艾尔的防御力。",
+    ]
+  },
+  "qiqi": {
+    descs: [
+      "普通攻击·进行至多五段的连续剑击。重击·消耗一定体力快速连续斩击。下落攻击·从空中下坠冲击地面，攻击下落路径上的敌人并在落地时造成范围伤害。",
+      "七七释放寒病鬼差，环绕自身旋转，持续对周围的敌人造成冰元素伤害。",
+      "七七释放仙力，对周围敌人施加冰元素标记，当前场上角色攻击被标记的敌人时，七七会为其恢复生命值。",
+    ]
+  },
+  "raiden": {
+    descs: [
+      "普通攻击·进行至多五段的连续枪击。重击·消耗一定体力向上挑击。下落攻击·从空中下坠冲击地面，攻击下落路径上的敌人并在落地时造成范围伤害。",
+      "雷电将军向前方释放「恶曜开眼」，造成雷元素范围伤害，并为附近的角色施加「雷罚恶曜之眼」，提升元素爆发伤害。",
+      "雷电将军解放「奥义·梦想真说」，拔出太刀进行强力攻击，造成雷元素范围伤害。之后进入「梦想一心」状态，恢复元素能量。",
+    ]
+  },
+  "razor": {
+    descs: [
+      "普通攻击·进行至多四段的连续剑击。重击·消耗一定体力旋转攻击。下落攻击·从空中下坠冲击地面，攻击下落路径上的敌人并在落地时造成范围伤害。",
+      "雷泽召唤雷狼之魂，对周围的敌人造成雷元素伤害，并为雷泽恢复雷元素能量。",
+      "雷泽释放体内的雷之力量，化身雷狼形态，对周围的敌人造成雷元素伤害，并获得雷元素附魔与攻击速度提升。",
+    ]
+  },
+  "rosaria": {
+    descs: [
+      "普通攻击·进行至多五段的连续枪击。重击·消耗一定体力向前突进。下落攻击·从空中下坠冲击地面，攻击下落路径上的敌人并在落地时造成范围伤害。",
+      "罗莎莉亚快速移动到敌人身后并攻击，造成冰元素伤害。",
+      "罗莎莉亚释放「终命的圣礼」，对周围敌人造成冰元素范围伤害，并为角色提升暴击率。",
+    ]
+  },
+  "sara": {
+    descs: [
+      "普通攻击·进行至多五段的连续弓箭射击。重击·进行伤害更高、更为精准的瞄准射击。瞄准时，雷元素会持续汇聚在箭矢上。",
+      "九条裟罗向后跃起并发射雷箭，造成雷元素伤害。命中后留下「乌羽」，短暂延迟后爆发造成雷元素范围伤害。",
+      "九条裟罗释放「煌煌千道镇式」，在周围降下四道雷击，造成雷元素范围伤害，并为角色提升攻击力。",
+    ]
+  },
+  "sayu": {
+    descs: [
+      "普通攻击·进行至多四段的连续剑击。重击·消耗一定体力旋转攻击。下落攻击·从空中下坠冲击地面，攻击下落路径上的敌人并在落地时造成范围伤害。",
+      "早柚缩成球滚向前方，滚动过程中接触敌人时造成风元素伤害。长按可持续滚动。",
+      "早柚召唤「影貉缭乱」，对周围敌人造成风元素范围伤害，并为附近的角色恢复生命值。",
+    ]
+  },
+  "sethos": {
+    descs: [
+      "普通攻击·进行至多四段的连续弓箭射击。重击·进行伤害更高、更为精准的瞄准射击。瞄准时，雷元素会持续汇聚在箭矢上。",
+      "赛索斯进行「湛影祭仪」，发射多枚箭矢对前方敌人造成雷元素伤害。",
+      "赛索斯释放「古仪·鸣砂玄弹」，造成雷元素范围伤害，并在场上留下持续造成雷元素伤害的领域。",
+    ]
+  },
+  "shenhe": {
+    descs: [
+      "普通攻击·进行至多五段的连续枪击。重击·消耗一定体力向前突进。下落攻击·从空中下坠冲击地面，攻击下落路径上的敌人并在落地时造成范围伤害。",
+      "申鹤释放「仰灵威召将役咒」，对敌人造成冰元素伤害，并为附近的角色施加冰翎效果，提升冰元素伤害。",
+      "申鹤释放「神女遣灵真诀」，造成冰元素范围伤害，并降低敌人的冰元素抗性和物理抗性。",
+    ]
+  },
+  "shikanoin-heizou": {
+    descs: [
+      "普通攻击·进行至多五段的连续攻击。重击·消耗一定体力旋转攻击。下落攻击·从空中下坠冲击地面，攻击下落路径上的敌人并在落地时造成范围伤害。",
+      "鹿野院平藏使用「戮心拳」，向前方打出强力的拳击，造成风元素伤害。长按可积蓄力量，提升伤害和范围。",
+      "鹿野院平藏飞踢敌人，造成风元素范围伤害，并提升附近的角色元素精通。",
+    ]
+  },
+  "sigewinne": {
+    descs: [
+      "普通攻击·进行至多四段的连续弓箭射击。重击·进行伤害更高、更为精准的瞄准射击。瞄准时，水元素会持续汇聚在箭矢上。",
+      "希格雯发射「疗愈·常规多弹」，为附近的角色恢复生命值并造成水元素伤害。",
+      "希格雯释放「饱和·饱和重混」，造成水元素范围伤害，并为队伍中所有角色恢复生命值。",
+    ]
+  },
+  "sucrose": {
+    descs: [
+      "普通攻击·进行至多四段的连续攻击。重击·消耗一定体力进行范围风元素攻击。下落攻击·从空中下坠冲击地面，攻击下落路径上的敌人并在落地时造成范围伤害。",
+      "砂糖召唤「风灵作成·陆叁零捌」，造成风元素范围伤害，并将敌人牵引至中心。",
+      "砂糖释放「禁·风灵作成·柒伍同构贰型」，召唤更大的风灵，造成持续风元素范围伤害。",
+    ]
+  },
+  "tartaglia": {
+    descs: [
+      "普通攻击·进行至多六段的连续弓箭射击。重击·进行伤害更高、更为精准的瞄准射击。瞄准时，水元素会持续汇聚在箭矢上。",
+      "达达利亚进入「近战」状态，使用水元素双刃进行近战攻击，并附加断流效果。",
+      "达达利亚释放「极恶技·尽灭闪」，造成大范围水元素伤害，并刷新元素战技的冷却时间。",
+    ]
+  },
+  "thoma": {
+    descs: [
+      "普通攻击·进行至多四段的连续枪击。重击·消耗一定体力向前突进。下落攻击·从空中下坠冲击地面，攻击下落路径上的敌人并在落地时造成范围伤害。",
+      "托马向前突刺，造成火元素伤害，并生成护盾。护盾对火元素伤害有250%的吸收效果。",
+      "托马展开「真红炽火之大铠」，造成火元素范围伤害，并间歇性对周围敌人造成火元素伤害。",
+    ]
+  },
+  "tighnari": {
+    descs: [
+      "普通攻击·进行至多四段的连续弓箭射击。重击·进行伤害更高、更为精准的瞄准射击。瞄准时，草元素会持续汇聚在箭矢上。",
+      "提纳里释放「识果种雷」，向前方发射跟踪弹，造成草元素伤害。",
+      "提纳里释放「造生·缠藤箭」，发射多枚追踪敌人的箭矢，造成草元素伤害。",
+    ]
+  },
+  "venti": {
+    descs: [
+      "普通攻击·进行至多六段的连续弓箭射击。重击·进行伤害更高、更为精准的瞄准射击。瞄准时，风元素会持续汇聚在箭矢上。",
+      "温迪在目标位置召唤风域，造成风元素范围伤害，并将敌人击飞。",
+      "温迪射出「风神之诗」，在目标位置制造巨大的风暴，将敌人卷入其中并持续造成风元素伤害。",
+    ]
+  },
+  "wanderer": {
+    descs: [
+      "普通攻击·进行至多三段的连续攻击。重击·消耗一定体力进行范围攻击。下落攻击·从空中下坠冲击地面，攻击下落路径上的敌人并在落地时造成范围伤害。",
+      "流浪者释放「羽画·风姿华歌」，对周围敌人造成风元素伤害，并腾空进入「优风倾姿」状态。",
+      "流浪者释放「狂言·式乐五番」，造成大范围风元素伤害。",
+    ]
+  },
+  "wriothesley": {
+    descs: [
+      "普通攻击·进行至多五段的连续拳击。重击·消耗一定体力向前打出强力的上勾拳。下落攻击·从空中下坠冲击地面，攻击下落路径上的敌人并在落地时造成范围伤害。",
+      "莱欧斯利向前突进并释放「冰牙突驰」，造成冰元素伤害，并为自身附加效果提升普通攻击伤害。",
+      "莱欧斯利释放「黑金狼噬」，造成冰元素范围伤害，并为自身恢复生命值。",
+    ]
+  },
+  "xiangling": {
+    descs: [
+      "普通攻击·进行至多五段的连续枪击。重击·消耗一定体力向前突进。下落攻击·从空中下坠冲击地面，攻击下落路径上的敌人并在落地时造成范围伤害。",
+      "香菱召唤锅巴，锅巴会持续对前方的敌人喷火，造成火元素伤害。",
+      "香菱释放旋火轮，围绕自身旋转，持续对周围的敌人造成火元素伤害。",
+    ]
+  },
+  "xianyun": {
+    descs: [
+      "普通攻击·进行至多四段的连续攻击。重击·消耗一定体力旋转攻击。下落攻击·从空中下坠冲击地面，攻击下落路径上的敌人并在落地时造成范围伤害。",
+      "闲云唤出祥鹤，向前方冲击造成风元素伤害，并留下助力区域。",
+      "闲云释放「暮集竹星」，造成风元素范围伤害，并为队伍恢复生命值。",
+    ]
+  },
+  "xiao": {
+    descs: [
+      "普通攻击·进行至多六段的连续枪击。重击·消耗一定体力向上挑击。下落攻击·从空中下坠冲击地面，攻击下落路径上的敌人并在落地时造成范围伤害。",
+      "魈向前方突进，对路径上的敌人造成风元素伤害。可以在空中施放。",
+      "魈戴上「降魔·护法夜叉」傩面，提升跳跃能力，攻击范围和伤害，并将攻击转化为风元素。",
+    ]
+  },
+  "xingqiu": {
+    descs: [
+      "普通攻击·进行至多五段的连续剑击。重击·消耗一定体力旋转攻击。下落攻击·从空中下坠冲击地面，攻击下落路径上的敌人并在落地时造成范围伤害。",
+      "行秋施展「古华剑·画雨笼山」，对敌人造成水元素伤害，并生成雨帘剑护盾，受到伤害时恢复生命值。",
+      "行秋释放「古华剑·裁雨留虹」，造成水元素范围伤害，并召唤虹剑势围绕角色，角色进行普通攻击时触发水元素协同攻击。",
+    ]
+  },
+  "xinyan": {
+    descs: [
+      "普通攻击·进行至多四段的连续剑击。重击·消耗一定体力旋转攻击。下落攻击·从空中下坠冲击地面，攻击下落路径上的敌人并在落地时造成范围伤害。",
+      "辛焱对周围敌人造成火元素伤害，并根据命中的敌人数量生成不同等级的护盾。",
+      "辛焱释放「叛逆刮弦」，造成火元素范围伤害，并引发持续的火元素冲击波。",
+    ]
+  },
+  "yae-miko": {
+    descs: [
+      "普通攻击·进行至多三段的连续攻击，造成雷元素伤害。重击·消耗一定体力进行瞄准攻击。下落攻击·从空中下坠冲击地面。",
+      "八重神子留下「杀生樱」，杀生樱会间歇性对附近的敌人降下落雷，造成雷元素伤害。",
+      "八重神子释放「大密法·天狐显真」，召唤天狐雷霆，造成大范围雷元素伤害。",
+    ]
+  },
+  "yanfei": {
+    descs: [
+      "普通攻击·发射火元素飞弹。重击·消耗一定体力并消耗持有的丹火印，造成火元素范围伤害，丹火印越多伤害越高。下落攻击·从空中下坠冲击地面。",
+      "烟绯召唤「律火迢迢」喷射火焰，对前方敌人造成火元素范围伤害。",
+      "烟绯释放「丹书立约」，对周围的敌人造成火元素范围伤害，并为烟绯施加最大数量的丹火印。",
+    ]
+  },
+  "yaoyao": {
+    descs: [
+      "普通攻击·进行至多四段的连续枪击。重击·消耗一定体力向前突进。下落攻击·从空中下坠冲击地面，攻击下落路径上的敌人并在落地时造成范围伤害。",
+      "瑶瑶抛出月桂，月桂会投掷白萝卜攻击敌人造成草元素伤害，或为附近的角色恢复生命值。",
+      "瑶瑶进入「月桂·抛掷远遥」状态，持续投掷白萝卜攻击敌人，并为队伍恢复生命值。",
+    ]
+  },
+  "yelan": {
+    descs: [
+      "普通攻击·进行至多四段的连续弓箭射击。重击·进行伤害更高、更为精准的瞄准射击。瞄准时，水元素会持续汇聚在箭矢上。",
+      "夜兰释放「萦络纵命索」，快速移动并标记敌人，造成水元素伤害。",
+      "夜兰释放「渊图玲珑骰」，造成水元素范围伤害，并召唤「玄掷玲珑」协同攻击，提升当前场上角色的伤害。",
+    ]
+  },
+  "yoimiya": {
+    descs: [
+      "普通攻击·进行至多五段的连续弓箭射击。重击·进行伤害更高、更为精准的瞄准射击。瞄准时，火元素会持续汇聚在箭矢上。",
+      "宵宫跳起「琉金云间草」，对敌人造成火元素伤害，并为普通攻击附上火元素。",
+      "宵宫释放「琉金尽染」，造成火元素范围伤害，并标记敌人，被标记的敌人受到攻击时额外引发爆炸。",
+    ]
+  },
+  "yun-jin": {
+    descs: [
+      "普通攻击·进行至多五段的连续枪击。重击·消耗一定体力向前突进。下落攻击·从空中下坠冲击地面，攻击下落路径上的敌人并在落地时造成范围伤害。",
+      "云堇旋枪收势，造成岩元素伤害。长按时生成护盾，防御敌人攻击后蓄力完成，造成更高的岩元素伤害。",
+      "云堇释放「破嶂见旌仪」，造成岩元素范围伤害，并为附近的角色施加「旌旗」效果，提升普通攻击伤害。",
+    ]
+  },
+  "zhongli": {
+    descs: [
+      "普通攻击·进行至多六段的连续枪击。重击·消耗一定体力向前突进。下落攻击·从空中下坠冲击地面，攻击下落路径上的敌人并在落地时造成范围伤害。",
+      "钟离令岩元素凝聚成「玉璋护盾」。护盾对所有元素伤害与物理伤害有150%的吸收效果，并降低周围敌人的元素抗性和物理抗性。",
+      "钟离降下「天星」，造成大量岩元素范围伤害，并石化敌人。",
+    ]
+  }
+};
+
+// ─── Type label CN ───
+const TYPE_CN = { "Normal Attack":"普通攻击", "Elemental Skill":"元素战技", "Elemental Burst":"元素爆发" };
+
+// ─── Chinese Constellation Descriptions ───
+const ZH_CONST_DESC = {
+  "albedo": [ "伊甸之花：阳华绽放时，为阿贝多恢复1.2点元素能量。", "显生之宙：阳华绽放时，为阿贝多附加显生效果，提升伤害，持续30秒。", "太阳之华：创生法·拟造阳华的技能等级提高3级。", "神性之陨：阳华领域内的角色下落攻击伤害提升30%。", "冥古之潮：诞生式·大地之潮的技能等级提高3级。", "无垢之土：阳华领域内的角色受到护盾保护时，造成的伤害提升17%。" ],
+  "alhaitham": [ "直观：重击或下落攻击命中时，艾尔海森获得1层琢光镜效果。", "辩章：施放殊境·显象结缚时，艾尔海森的元素精通提升50点，持续8秒。", "幽轮：共相·理式摹写的技能等级提高3级。", "铭镌：施放殊境·显象结缚时，基于当前持有的琢光镜层数，每层提升艾尔海森10%草元素伤害。", "智识：殊境·显象结缚的技能等级提高3级。", "正理：施放殊境·显象结缚时，若消耗了4层琢光镜，则队伍中所有角色获得10%暴击率提升。" ],
+  "aloy": [ "异界之星：阿洛伊的冰尘雪野的投掷物数量增加1枚。", "异界之星：冰尘雪野的冷却时间降低15%。", "异界之星：曙光预言的技能等级提高3级。", "异界之星：阿洛伊的元素充能效率提升25%。", "异界之星：曙光预言的技能等级提高3级。", "异界之星：阿洛伊的冰元素伤害加成提升15%。" ],
+  "amber": [ "一箭双丘丘！：瞄准射击时射出两枚箭矢，第二枚造成20%的伤害。", "一触即发：兔兔伯爵爆炸时造成额外伤害，基于安柏的生命值上限。", "烧起来啦！：箭雨的技能等级提高3级。", "才不是寻常布偶：兔兔伯爵的冷却时间降低20%。", "是兔兔伯爵！：箭雨的范围扩大30%。", "疾如野火：使用箭雨后，队伍中所有角色的移动速度提升15%，攻击力提升15%，持续10秒。" ],
+  "arataki-itto": [ "倘若不知，我讲你听：使用最恶鬼王·一斗轰临后，荒泷一斗获得2层乱神之怪力效果。", "纠集众人，斗倒御岳：施放魔杀绝技·赤牛发破后，为荒泷一斗恢复6点元素能量。", "牢狱之灾，茶饭之所：魔杀绝技·赤牛发破的技能等级提高3级。", "水陆自在，牛王同行：最恶鬼王·一斗轰临状态下，队伍中所有角色的防御力提升20%。", "久 known as 久：最恶鬼王·一斗轰临的技能等级提高3级。", "本大爷是荒泷一斗：最恶鬼王·一斗轰临的暴击伤害提升70%。" ],
+  "arlecchino": [ "「所有的仇与债皆由我偿…」：万相化灰的伤害提升20%。", "「所有的赏与罚皆自我出…」：施加血偿勒令时，阿蕾奇诺获得20%生命值上限的护盾。", "「所有的欺诈尽录账簿」：万相化灰的技能等级提高3级。", "「一切的盟约自当谨守」：厄月将升命中敌人时，为队伍中所有角色恢复生命值。", "「一切的罪责我独承担」：厄月将升的技能等级提高3级。", "「自此以后，我们将共飨新生。」：厄月将升造成的伤害提升，基于阿蕾奇诺攻击力的150%。" ],
+  "ayaka": [ "霜枯的墨染：神里流·冰华的冷却时间降低2秒。", "三重雪关扉：施放神里流·霜灭时额外释放两枚小型冰刃。", "花白锦画纸吹雪：神里流·冰华的技能等级提高3级。", "盈缺流返：神里流·霜灭命中敌人时，降低敌人30%防御力，持续6秒。", "花云钟入月：神里流·霜灭的技能等级提高3级。", "间月：每10秒，神里绫华的重击伤害提升298%。" ],
+  "ayato": [ "镜华风姿：生命值低于50%时，神里流·镜花的伤害提升30%。", "世有源泉：神里流·镜花获得的浪闪层数上限提升至5层。", "无意弄花：神里流·镜花的技能等级提高3级。", "细水长流：施放神里流·水囿后，附近角色的普通攻击速度提升15%。", "春水润田：神里流·水囿的技能等级提高3级。", "滥觞之源：神里流·镜花命中敌人后，额外造成一次水元素范围伤害。" ],
+  "baizhu": [ "悬壶：太素诊要的可使用次数增加1次。", "动静：太素诊要的治疗量提升15%，且效果结束时为角色恢复能量。", "九候：太素诊要的技能等级提高3级。", "大患：愈气全形论对敌人造成伤害时，降低敌人20%草元素抗性。", "真知：愈气全形论的技能等级提高3级。", "真邪如扣：愈气全形论造成伤害时，额外造成一次基于白术攻击力200%的草元素伤害。" ],
+  "barbara": [ "彩色歌谣：芭芭拉每10秒恢复1点元素能量。", "元气迸发：演唱，开始♪的冷却时间降低15%。", "明日之星：演唱，开始♪的技能等级提高3级。", "努力即魔法：重击命中敌人时，为队伍中所有角色恢复生命值。", "纯真的羁绊：闪耀奇迹♪的技能等级提高3级。", "将一切美好献给你：芭芭拉倒下时自动为队伍中所有角色恢复大量生命值。" ],
+  "beidou": [ "鱼龙沉四方：施放捉浪时，为北斗恢复16点元素能量。", "赫赫雷涌起：捉浪的雷兽之影可弹射攻击2个额外敌人。", "潮引祸至：捉浪的技能等级提高3级。", "孤辰茕怀：受到攻击后10秒内，北斗的普通攻击附带20%额外雷元素伤害。", "浪海白马踏：斫雷的技能等级提高3级。", "北斗祓幽厄：斫雷持续期间，周围敌人的雷元素抗性降低15%。" ],
+  "bennett": [ "冒险憧憬：热情过载的冷却时间降低20%，且不会击飞自己。", "踏破绝境：生命值低于70%时，班尼特的元素充能效率提升30%。", "火热激情：热情过载的技能等级提高3级。", "热情不灭：使用一段蓄力的热情过载时，可进行追加攻击。", "探索真知：美妙旅程的技能等级提高3级。", "烈火与勇气：在美妙旅程领域内的单手剑、双手剑、长柄武器角色获得15%火元素伤害加成。" ],
+  "candace": [ "回流的赤沙之瞳：圣仪·苍鹭庇卫状态下，元素爆发伤害提升25%。", "贯月的穿芒之枪：圣仪·苍鹭庇卫状态下的攻击命中敌人时，为坎蒂丝恢复元素能量。", "织成的掠影之辉：圣仪·苍鹭庇卫的技能等级提高3级。", "守誓的冠冕之仪：圣仪·灰鸰衒潮的潮汐加护状态持续时间延长2秒。", "萦苍的耀金之光：圣仪·灰鸰衒潮的技能等级提高3级。", "衍溢的圣仪之潮：施放圣仪·灰鸰衒潮后，坎蒂丝的普通攻击造成水元素伤害。" ],
+  "charlotte": [ "核实范围：取景·冰点构图法命中敌人时，为夏洛蒂恢复元素能量。", "追求真相的职责：取景·冰点构图法的持续时间延长2秒，伤害提升15%。", "独立驱动：取景·冰点构图法的技能等级提高3级。", "监督责任：定格·全方位印证的治疗量提升。", "良知原则：定格·全方位印证的技能等级提高3级。", "有趣报道：定格·全方位印证对敌人造成伤害时，额外造成一次冰元素范围伤害。" ],
+  "chevreuse": [ "保持阵型的魄力：近迫式急促拦射的伤害提升20%。", "诱敌深入的狙杀：近迫式急促拦射命中敌人时，降低敌人15%火元素抗性。", "熟练拆解的技巧：近迫式急促拦射的技能等级提高3级。", "多重速射的秘方：爆轰律·方圆阵的伤害提升。", "加强火力的复嬉：爆轰律·方圆阵的技能等级提高3级。", "终结罪恶的追索：爆轰律·方圆阵的暴击率提升20%。" ],
+  "chiori": [ "绸缎流转：施放羽袖一触后，千织的移动速度提升15%，持续5秒。", "双丝成缕：羽袖一触召唤的人形「绢」攻击范围扩大，伤害提升。", "锦绣添花：羽袖一触的技能等级提高3级。", "裁锦着身：二刀之型·比翼命中敌人时，为角色恢复生命值。", "绫罗尽染：二刀之型·比翼的技能等级提高3级。", "华服竞艳：施放二刀之型·比翼后，队伍中所有角色造成伤害提升15%。" ],
+  "chongyun": [ "释凛咏冰：冰刃命中敌人时，降低敌人10%冰元素抗性，持续8秒。", "周天运转：灵刃·重华叠霜领域内角色的普通攻击造成的冰元素伤害提升15%。", "云尽光生：灵刃·重华叠霜的技能等级提高3级。", "浮云霜天：重华叠霜领域内的角色受到冰元素攻击时，恢复2点元素能量。", "真道正理：云开星落的技能等级提高3级。", "四灵捧圣：云开星落对冻结状态下的敌人造成额外伤害。" ],
+  "clorinde": [ "「自此，行过烛影之帷」：狩夜之巡的夜巡状态持续时间延长2秒。", "「自此，直面长夜之危」：狩夜之巡状态下，克洛琳德的暴击率提升15%。", "「我将铭记白昼的誓言」：狩夜之巡的技能等级提高3级。", "「铭记泪，生命与仁爱」：残光将终命中敌人时，为角色恢复生命值。", "「也铭记黎明终将到来」：残光将终的技能等级提高3级。", "「为此，勿将希望弃扬」：残光将终的暴击伤害提升。" ],
+  "collei": [ "护生之林：柯莱处于队伍后台时，元素充能效率提升20%。", "巡山之行：拂花淬叶箭的回收箭矢造成伤害时，提升柯莱的元素精通。", "飘香之夏：拂花淬叶箭的技能等级提高3级。", "骈麟之赠：施放猫猫秘宝后，队伍中所有角色的元素精通提升40点，持续12秒。", "俱象之火：猫猫秘宝的技能等级提高3级。", "坠镞之矢：猫猫秘宝造成伤害时，额外造成一次草元素伤害。" ],
+  "cyno": [ "立仪：施放秘仪·律渊渡魂后，赛诺的普通攻击速度提升20%，持续10秒。", "定仪：秘仪·律渊渡魂命中敌人时，赛诺获得30%雷元素伤害加成，持续10秒。", "律仪：秘仪·律渊渡魂的技能等级提高3级。", "畏仪：圣仪·煅魂的奥义状态下，触发元素反应时雷元素伤害提升。", "冥仪：圣仪·煅魂的奥义的技能等级提高3级。", "羽仪：圣仪·煅魂的奥义状态下，赛诺的暴击率提升20%。" ],
+  "dehya": [ "皎焰不熄：迪希雅的生命值上限提升20%。", "净沙卫戍：熔铁流狱的伤害提升，基于迪希雅的生命值上限。", "怒焰炽盛：熔铁流狱的技能等级提高3级。", "誓约羁縻：炎啸狮咬的伤害提升。", "鬃狼驰骋：炎啸狮咬的技能等级提高3级。", "燎原焚焰：炎啸狮咬的暴击率提升20%。" ],
+  "diluc": [ "罪之裁断：迪卢克对生命值高于50%的敌人造成的伤害提升15%。", "炙热余烬：迪卢克受到伤害时，攻击力提升15%，持续10秒。", "钢铁炽焰：逆焰之刃的技能等级提高3级。", "流火焦灼：连续施放逆焰之刃时伤害提升。", "昭示命运的烈焰：黎明的技能等级提高3级。", "清算黑暗的炎之剑：施放黎明后，迪卢克的普通攻击速度提升30%，持续6秒。" ],
+  "diona": [ "特调的余韵：猫爪冻冻产生的护盾结束时，为迪奥娜恢复15点元素能量。", "猫爪冰摇：猫爪冻冻的伤害提升15%，护盾吸收量提升15%。", "还、要、更、好！：猫爪冻冻的技能等级提高3级。", "「消酒业！」：最烈特调领域内的敌人蓄力时间延长60%。", "「再加冰！」：最烈特调的技能等级提高3级。", "「打烊时间！」：在最烈特调领域内的角色获得元素精通提升。" ],
+  "dori": [ "追加投资：镇灵之灯·烦恼解决炮的弹药数量增加1枚。", "特许经营：镇灵之灯·烦恼解决炮命中敌人时，恢复5点元素能量。", "百巧千奇：镇灵之灯·烦恼解决炮的技能等级提高3级。", "酌盈剂虚：施放卡萨扎莱宫的无微不至后，为队伍中所有角色恢复能量。", "物超所值：卡萨扎莱宫的无微不至的技能等级提高3级。", "漫掷万镒：施放卡萨扎莱宫的无微不至后，附近角色获得雷元素附魔，持续3秒。" ],
+  "emilie": [ "淡香浸析：撷萃调香的伤害提升20%。", "湖光顶调：撷萃调香领域的持续时间延长3秒。", "郁馥臻萃：撷萃调香的技能等级提高3级。", "露茉凝珠：香氛演绎的伤害提升，基于艾梅莉埃的攻击力。", "纯露凝芳：香氛演绎的技能等级提高3级。", "茉香萦绕：香氛演绎持续期间，队伍中角色草元素伤害提升。" ],
+  "eula": [ "光潮的幻象：消耗冷酷之心效果时，优菈的物理伤害加成提升30%，持续6秒。", "弄潮的少女：长按冰潮的涡旋的冷却时间降低至与短按相同。", "劳伦斯的血脉：冰潮的涡旋的技能等级提高3级。", "自卑的束缚：凝浪之光剑对生命值低于50%的敌人造成的伤害提升25%。", "骑士的素质：凝浪之光剑的技能等级提高3级。", "贵族的义务：凝浪之光剑的光剑爆发时获得5层能量，攻击命中敌人时每层转化为额外伤害。" ],
+  "faruzan": [ "真知：非想风天的风暴之矢命中敌人时，提升珐露珊的元素充能效率。", "忘知：非想风天的伤害提升25%。", "歪知之障：非想风天的技能等级提高3级。", "神知：抟风秘道的飓风命中敌人时，降低敌人风元素抗性。", "奇知：抟风秘道的技能等级提高3级。", "妙道：抟风秘道持续期间，附近角色风元素暴击伤害提升40%。" ],
+  "fischl": [ "幽邃鸦渊：奥兹在场时，持续对周围的敌人造成雷元素伤害。", "圣裁之羽：奥兹攻击造成的伤害提升，基于菲谢尔的攻击力。", "渊色黑翼：夜巡影翼的技能等级提高3级。", "皇女幻绮谭：施放至夜幻现时，对周围敌人造成雷元素伤害。", "夜枭凝辉：至夜幻现的技能等级提高3级。", "永夜之禽：奥兹在场时间延长2秒，并协同当前角色攻击。" ],
+  "freminet": [ "深海与泡沫之梦：浮冰增压的冷却时间降低15%。", "企鹅与丰饶之国：浮冰增压的伤害提升20%。", "暗流与白砂之歌：浮冰增压的技能等级提高3级。", "雪月与芦笛之舞：施放猎影潜袭后，弗雷米特的普通攻击伤害提升。", "炉火与欢笑之夜：猎影潜袭的技能等级提高3级。", "梦想与希望之晓：浮冰增压造成的伤害提升，基于弗雷米特的攻击力。" ],
+  "furina": [ "「爱是难驯鸟，哀乞亦无用。」：孤心沙龙召唤的成员的伤害提升15%。", "「女人皆善变，仿若水中萍。」：孤心沙龙召唤的成员攻击命中时，为芙宁娜恢复生命值。", "「秘密藏心间，无人知我名。」：孤心沙龙的技能等级提高3级。", "「若非处幽冥，怎知生可贵！」：万众狂欢的持续时间延长3秒。", "「我已有觉察，他名即是…！」：万众狂欢的技能等级提高3级。", "「诸君听我颂，共举爱之杯！」：施放万众狂欢后，芙宁娜获得相当于她生命值上限的伤害加成。" ],
+  "gaming": [ "瑞兽眷顾：醒神吼的伤害提升20%。", "瑞兽醒觉：施放醒神吼后，嘉明的攻击力提升，持续10秒。", "瑞兽腾跃：醒神吼的技能等级提高3级。", "瑞兽佑护：施放瑞兽降世后，队伍中所有角色的元素精通提升。", "瑞兽降临：瑞兽降世的技能等级提高3级。", "瑞兽归位：瑞兽降世造成的伤害提升，基于嘉明的攻击力。" ],
+  "ganyu": [ "饮露：二段蓄力重击的霜华箭命中敌人时，降低敌人15%冰元素抗性，持续6秒。", "获麟：山泽麟迹的可使用次数增加1次。", "行云：山泽麟迹的技能等级提高3级。", "西狩：降众天华领域内的敌人受到的伤害提升25%。", "折草：降众天华的技能等级提高3级。", "履虫：施放降众天华后，30秒内下一枚霜华箭无需蓄力。" ],
+  "gorou": [ "犬奔·疾如风：兽牙逐突形胜战法的领域内，当前场上角色移动速度提升15%。", "犬座·威如雷：施放犬坂的远吠后，附近角色防御力提升25%，持续12秒。", "犬势·炎如火：犬坂的远吠的技能等级提高3级。", "犬舔·温如水：兽牙逐突形胜战法的领域内为角色恢复生命值。", "犬扑·撼如雷：兽牙逐突形胜战法的技能等级提高3级。", "犬跃·坚如山：兽牙逐突形胜战法的领域内，附近角色的岩元素暴击伤害提升40%。" ],
+  "hu-tao": [ "赤团开时：处于蝶引来生的彼岸蝶舞状态下，胡桃的重击不会消耗体力。", "雾里看花：蝶引来生的血梅香伤害提升，基于胡桃的生命值上限。", "逗留采色：蝶引来生的技能等级提高3级。", "伴君眠花：安神秘法命中处于血梅香状态的敌人时，队伍中所有角色暴击率提升12%，持续15秒。", "无可奈何花落去：安神秘法的技能等级提高3级。", "幽蝶来生：胡桃的生命值降至25%以下时，触发一次蝶引来生的效果。" ],
+  "jean": [ "流转剑脊的暴风：风压剑长按超过1秒时，牵引速度提升。", "守护众人的坚盾：琴获得元素晶球或元素微粒时，队伍中所有角色恢复生命值。", "西风吹拂之时：风压剑的技能等级提高3级。", "蒲公英的国土：蒲公英之风领域内的敌人风元素抗性降低40%。", "须臾一瞬的烈风：蒲公英之风的技能等级提高3级。", "恩眷万民的狮牙：蒲公英之风领域内受到伤害时，琴获得伤害减免。" ],
+  "kachina": [ "晶片，也是一种宝石：出击，冲天转转！的转转冲击造成的岩元素伤害提升。", "不能少了…冲天转转：出击，冲天转转！的冷却时间降低20%。", "改良型·平衡稳定器：出击，冲天转转！的技能等级提高3级。", "敌人越多，越要小心：现在，认真时间！的伤害提升，基于卡齐娜的防御力。", "迄今为止，所有收藏：现在，认真时间！的技能等级提高3级。", "这一次，我一定要赢：现在，认真时间！的暴击率提升20%。" ],
+  "kaeya": [ "卓越的血脉：对受到冰元素影响的敌人，凯亚的普通攻击暴击率提升15%。", "无尽的霜舞：霜袭期间击败敌人时，持续时间延长2.5秒，最多延长15秒。", "凛冽的冰戏：霜袭的技能等级提高3级。", "极寒的轻吻：凛冽轮舞命中敌人时，为凯亚生成护盾。", "拥抱寒霜：凛冽轮舞的技能等级提高3级。", "轮旋的冰凌：凛冽轮舞额外生成一枚冰棱，并为凯亚恢复元素能量。" ],
+  "kaveh": [ "门庭若市：画则巧施的绘图空间领域扩大，伤害提升。", "御风雅韵：画则巧施命中敌人时，为卡维恢复元素能量。", "金顶灿光：画则巧施的技能等级提高3级。", "百柱盛宴：施放御场绘图后，附近所有角色元素精通提升。", "圣殿奇藏：御场绘图的技能等级提高3级。", "天园理想：御场绘图持续期间，卡维的普通攻击造成额外草元素伤害。" ],
+  "kazuha": [ "色厉内荏：千早振的冷却时间降低10%。", "山岚残火：千早振造成的风元素伤害提升。", "枫袖奇谭：千早振的技能等级提高3级。", "大空幻法：万叶之一刀的能量低于45点时，获得元素充能效率提升。", "万世集：万叶之一刀的技能等级提高3级。", "血赤红叶：施放千早振或万叶之一刀后，枫原万叶获得风元素附魔，持续5秒。" ],
+  "keqing": [ "雷厉：雷楔存在期间再次施放星斗归位时，刻晴获得15%雷元素伤害加成，持续8秒。", "苛捐：星斗归位命中敌人时，为刻晴恢复6点元素能量。", "登阁：星斗归位的技能等级提高3级。", "调律：触发雷元素相关反应后，刻晴的攻击力提升25%，持续10秒。", "移灯：天街巡游的技能等级提高3级。", "廉贞：天街巡游命中敌人时，刻晴的普通攻击速度提升15%，持续5秒。" ],
+  "kinich": [ "七鹦之喙：悬猎·游骋高狩的伤害提升。", "星虎之掌：悬猎·游骋高狩命中敌人时，为基尼奇恢复元素能量。", "原鳄之爪：悬猎·游骋高狩的技能等级提高3级。", "蜂鸟之羽：向伟大圣龙致意的伤害提升，基于基尼奇的攻击力。", "吼猴之尾：向伟大圣龙致意的技能等级提高3级。", "瑞兽之形：向伟大圣龙致意暴击率提升20%。" ],
+  "kirara": [ "物递流转：呜喵町飞脚对敌人造成的草元素伤害提升。", "八荒显影：呜喵町飞脚状态下，绮良良的移动速度提升15%。", "万界通邮：呜喵町飞脚的技能等级提高3级。", "韦驮骏足：秘法·惊喜特派的伤害提升。", "千里一日：秘法·惊喜特派的技能等级提高3级。", "沿途百景：施放秘法·惊喜特派后，队伍中所有角色的元素精通提升。" ],
+  "klee": [ "连环轰隆：蹦蹦炸弹的爆炸会额外分裂成3枚炸弹。", "破破弹片：蹦蹦炸弹的诡雷对敌人造成伤害时，降低敌人15%防御力。", "可莉特调：蹦蹦炸弹的技能等级提高3级。", "一触即发：轰轰火花持续期间，可莉的普通攻击造成额外火元素伤害。", "轰击之星：轰轰火花的技能等级提高3级。", "火力全开：施放轰轰火花后，队伍中所有角色恢复元素能量。" ],
+  "kokomi": [ "决水于溪：海月之誓的仪来羽衣状态下，普通攻击的伤害提升。", "潮涌于渊：海人化羽状态下，珊瑚宫心海的普通攻击命中敌人时恢复元素能量。", "海渚月舟：海月之誓的技能等级提高3级。", "月摄于水：海人化羽状态下，珊瑚宫心海的攻击速度提升。", "百川集海：海人化羽的技能等级提高3级。", "珊瑚一心：海人化羽状态下，珊瑚宫心海的普通攻击和重击为附近角色恢复额外生命值。" ],
+  "kuki-shinobu": [ "割舍怜悯之心：越祓草轮的伤害提升20%。", "割舍侥幸之心：越祓草轮的持续时间延长3秒。", "割舍痛苦之心：越祓草轮的技能等级提高3级。", "割舍封闭之心：御咏鸣神刈山祭的伤害提升。", "割舍割舍之心：御咏鸣神刈山祭的技能等级提高3级。", "割舍软弱之心：久岐忍被击中时不会倒下，并在15秒内自动恢复生命值。" ],
+  "layla": [ "寰宇遨游：垂裳端凝之夜的晚星命中敌人时，为莱依拉恢复元素能量。", "星火燎原：垂裳端凝之夜的晚星攻击命中时，提升莱依拉的伤害。", "长夜行杲：垂裳端凝之夜的技能等级提高3级。", "昭曜星芒：星流摇床之梦的星光弹数量增加。", "众生之望：星流摇床之梦的技能等级提高3级。", "璨焰华光：星流摇床之梦的星光弹命中时，造成额外冰元素伤害。" ],
+  "lisa": [ "无限的电回路：苍雷命中敌人时，为丽莎恢复2点元素能量。", "空间电势结界：苍雷长按时，丽莎获得防御力提升效果。", "谐振的雷光：苍雷的技能等级提高3级。", "如电的紧迫：蔷薇的雷光命中敌人时，丽莎的攻击力提升。", "等离态的落雷：蔷薇的雷光的技能等级提高3级。", "脉冲的蔷薇：蔷薇的雷光登场时，对周围敌人造成雷元素伤害。" ],
+  "lynette": [ "暗芒流影：谜影障身法的谜影刺击命中敌人时，为琳妮特恢复元素能量。", "悬谜叠嶂：谜影障身法的谜影刺击伤害提升。", "视错颠倒：谜影障身法的技能等级提高3级。", "默会暗通：魔术·变景幻戏的伤害提升。", "遮眼法：魔术·变景幻戏的技能等级提高3级。", "瞰察眼：施放魔术·变景幻戏后，队伍中所有角色攻击力提升。" ],
+  "lyney": [ "空取奇术：炫惑光影的可使用次数增加1次。", "巧言如簧：炫惑光影命中敌人时，林尼获得生命值恢复。", "心法惑惑：炫惑光影的技能等级提高3级。", "熟稔落签：大魔术·灵迹巡游的伤害提升。", "谜底揭晓：大魔术·灵迹巡游的技能等级提高3级。", "微笑的礼帽：大魔术·灵迹巡游的暴击率提升20%，暴击伤害提升。" ],
+  "mika": [ "遇合的因缘：星霜的流旋的鸳鴦流流矢命中敌人时，为米卡恢复元素能量。", "交游的旅步：星霜的流旋的鸳鴦流流矢数量增加1枚。", "游击的心得：星霜的流旋的技能等级提高3级。", "晴霜的祝念：苍翎的颂歌的翎羽造成伤害时，恢复队伍生命值。", "引示的星铃：苍翎的颂歌的技能等级提高3级。", "依随的策援：苍翎的颂歌的翎羽数量增加1枚，且造成的伤害提升。" ],
+  "mona": [ "沉没的预言：元素反应影响下的敌人受到水元素相关反应时，效果提升。", "星月的连珠：重击有20%概率额外释放一次。", "不休的天象：水中幻愿的技能等级提高3级。", "灭绝的预言：星命定轨的泡影状态下敌人受到的伤害提升。", "命运的嘲弄：星命定轨的技能等级提高3级。", "厄运的修辞：星命定轨的泡影状态下，莫娜的移动速度提升。" ],
+  "mualani": [ "悠闲的「梅兹特利」…：踏鲨破浪的伤害提升。", "全力以赴玛拉妮！：踏鲨破浪命中敌人时，为玛拉妮恢复元素能量。", "在欢乐海上冲浪：踏鲨破浪的技能等级提高3级。", "鲨鲨主食是豚豚：爆瀑飞弹的伤害提升。", "同款冲浪板有售！：爆瀑飞弹的技能等级提高3级。", "「流泉之众」的精神：爆瀑飞弹的暴击率提升20%。" ],
+  "nahida": [ "心识蕴藏之种：所闻遍计的灭净三业命中敌人时，为纳西妲恢复元素能量。", "正等善见之根：所闻遍计的火元素相关反应伤害提升。", "熏习成就之芽：所闻遍计的技能等级提高3级。", "具足正见之茎：心景幻成的的伤害提升。", "开示悟入之叶：心景幻成的技能等级提高3级。", "大辨圆成之果：心景幻成持续期间，纳西妲的普通攻击命中敌人造成额外草元素伤害。" ],
+  "navia": [ "淑女的距离感：施放典仪式晶火后，娜维娅的普通攻击伤害提升。", "总裁的猎逐：典仪式晶火的伤害提升。", "经营家的广域：典仪式晶火的技能等级提高3级。", "铭誓的从容：如霰澄天的鸣礼的伤害提升。", "谈判人的坚毅：如霰澄天的鸣礼的技能等级提高3级。", "老板的机锋：如霰澄天的鸣礼的暴击率提升20%。" ],
+  "neuvillette": [ "尊荣的创定：那维莱特的生命值上限提升12%。", "律法的诘诫：那维莱特的普通攻击和重击造成的伤害提升。", "寓言的摹写：泪水啊，我必偿还的技能等级提高3级。", "怜悯的冠冕：施放潮水啊，我已归来后，那维莱特获得生命值恢复。", "公义的断制：潮水啊，我已归来的技能等级提高3级。", "忿怒的报偿：潮水啊，我已归来的伤害提升，基于那维莱特的生命值上限。" ],
+  "nilou": [ "却月的轻舞：七域舞步的水环持续时间延长6秒。", "星天的花雨：浮莲舞步·远梦聆泉造成的伤害提升。", "步月的影迹：七域舞步的技能等级提高3级。", "流盼的假寐：七域舞步的水环命中敌人时，为妮露恢复元素能量。", "旋绚的华光：浮莲舞步·远梦聆泉的技能等级提高3级。", "载霜的弦音：浮莲舞步·远梦聆泉的暴击率提升20%。" ],
+  "ningguang": [ "璇玑透：普通攻击命中时造成范围伤害。", "璇玑合：璇玑屏碎裂时，冷却时间重置。", "璇玑晦：璇玑屏的技能等级提高3级。", "璇玑烁：璇玑屏附近的角色元素抗性提升。", "璇玑屏：天权崩玉的技能等级提高3级。", "璇玑：施放天权崩玉后，为凝光生成7枚星璇。" ],
+  "noelle": [ "支援就交给我吧：同时处于护心铠和大扫除状态下时，诺艾尔的攻击力提升。", "旋风女仆：重击的体力消耗降低20%，且伤害提升15%。", "女仆不会受伤：护心铠的技能等级提高3级。", "之后会扫干净的：护心铠效果结束时，对周围敌人造成岩元素范围伤害。", "骑士团的女仆长：大扫除的技能等级提高3级。", "必须一尘不染：大扫除状态下，诺艾尔的攻击力额外基于防御力提升。" ],
+  "qiqi": [ "凌寒：仙法·寒病鬼差的寒病鬼差命中敌人时，为七七恢复元素能量。", "冰寒蚀骨：对受到冰元素影响的敌人触发冰冻反应时，七七获得攻击力提升。", "登仙：仙法·寒病鬼差的技能等级提高3级。", "天威压境：仙法·救苦度厄的度厄效果结束时，为角色恢复生命值。", "红莲冰：仙法·救苦度厄的技能等级提高3级。", "起死回骸：施放仙法·救苦度厄时，队伍中所有倒下的角色复苏并恢复生命值。" ],
+  "raiden": [ "凶将显世：恶曜开眼获得的诸愿百眼之轮，元素能量积累速度提升。", "斩铁断金：奥义·梦想真说的梦想一刀和梦想一心状态下的攻击，无视敌人60%防御力。", "愧景庶类：神变·恶曜开眼的技能等级提高3级。", "常春开琼：奥义·梦想真说的梦想一心状态结束后，附近角色攻击力提升30%，持续10秒。", "凶变显象：奥义·梦想真说的技能等级提高3级。", "负愿前行：奥义·梦想真说的梦想一心状态下，雷电将军的元素爆发冷却时间缩短。" ],
+  "razor": [ "狼性：获得元素晶球或元素微粒后，雷泽的伤害提升10%，持续8秒。", "压制：对生命值低于30%的敌人，暴击率提升10%。", "兽魂：利爪与苍雷的技能等级提高3级。", "撕咬：利爪与苍雷的雷之狼爪命中敌人时，降低敌人15%防御力，持续7秒。", "利爪：雷牙的技能等级提高3级。", "天狼：雷牙的雷狼形态下，雷泽的普通攻击命中时对周围敌人造成雷元素伤害。" ],
+  "rosaria": [ "罪之导引：噬罪的告解的伤害提升。", "福祸相依：噬罪的告解的持续时间延长4秒。", "告解之仪：噬罪的告解的技能等级提高3级。", "苦痛恩典：终命的圣礼的冰枪命中敌人时，为罗莎莉亚恢复元素能量。", "临终祈礼：终命的圣礼的技能等级提高3级。", "代行裁判：终命的圣礼的冰枪使敌人物理抗性降低20%，持续10秒。" ],
+  "sara": [ "乌眼：鸦羽天狗霆雷召咒的乌羽命中敌人时，为九条裟罗恢复元素能量。", "鸦羽：鸦羽天狗霆雷召咒的乌羽爆炸范围扩大，伤害提升。", "心魔：鸦羽天狗霆雷召咒的技能等级提高3级。", "彻证：煌煌千道镇式的雷击命中敌人时，为附近角色恢复元素能量。", "咒詈：煌煌千道镇式的技能等级提高3级。", "我界：煌煌千道镇式提供的攻击力加成提升。" ],
+  "sayu": [ "一心二用之术：呜呼流·风隐急进的翻滚命中敌人时，为早柚恢复元素能量。", "理来说欠揍：呜呼流·风隐急进状态下，每次翻滚造成的伤害提升。", "这,这,这：呜呼流·风隐急进的技能等级提高3级。", "偷懒的新方法：呜呼流·影貉缭乱造成的伤害提升。", "快,正是休息时间：呜呼流·影貉缭乱的技能等级提高3级。", "睡眠无敌：呜呼流·影貉缭乱的治疗量和伤害提升。" ],
+  "sethos": [ "铭心的巡礼：湛影祭仪的伤害提升。", "秘仪的默言：湛影祭仪命中敌人时，为赛索斯恢复元素能量。", "日月的告谕：湛影祭仪的技能等级提高3级。", "谒见的恩颂：古仪·鸣砂玄弹的伤害提升。", "圣卷的僭礼：古仪·鸣砂玄弹的技能等级提高3级。", "王威的历辩：古仪·鸣砂玄弹的暴击率提升20%。" ],
+  "shenhe": [ "心斋：仰灵威召将役咒的可使用次数增加1次。", "定蒙：仰灵威召将役咒的冰翎持续时间延长3秒。", "潜虚：仰灵威召将役咒的技能等级提高3级。", "洞观：神女遣灵真诀的冰凌命中敌人时，队伍中角色冰元素伤害提升。", "化神：神女遣灵真诀的技能等级提高3级。", "忘玄：施放神女遣灵真诀后，申鹤的普通攻击和重击造成的冰元素伤害提升。" ],
+  "shikanoin-heizou": [ "名侦探的推理：戮心拳的变格效果触发时，鹿野院平藏的元素精通提升。", "真探：戮心拳的勠心拳蓄力时，抗打断能力提升。", "暗号隐语：戮心拳的技能等级提高3级。", "无言的示踪书：聚风蹴的嘶风踢命中敌人时，为鹿野院平藏恢复元素能量。", "四方之密室：聚风蹴的技能等级提高3级。", "奇想天外之捜査録：聚风蹴的嘶风踢暴击率提升20%。" ],
+  "sigewinne": [ "最开心的快乐增压：疗愈·常规多弹的治疗量提升。", "最慈悲的减伤梯度：疗愈·常规多弹为角色提供伤害减免。", "最稳定的阻凝器：疗愈·常规多弹的技能等级提高3级。", "最润泽的泵：饱和·饱和重混的伤害提升。", "最优化的增量比率：饱和·饱和重混的技能等级提高3级。", "最崇高的治愈之心：饱和·饱和重混的暴击率提升20%。" ],
+  "sucrose": [ "堆叠真空域：风灵作成·陆叁零捌的可使用次数增加1次。", "不羁型贝特：禁·风灵作成·柒伍同构贰型的持续时间延长2秒。", "零失误少女：风灵作成·陆叁零捌的技能等级提高3级。", "炼金的执着：普通攻击或重击命中时，有概率降低技能冷却时间。", "认真普通瓶：禁·风灵作成·柒伍同构贰型的技能等级提高3级。", "混沌熵：禁·风灵作成·柒伍同构贰型触发元素转化时，获得额外元素伤害加成。" ],
+  "tartaglia": [ "魔王武装·遏浪：魔王武装·狂澜的冷却时间降低20%。", "魔王武装·暗流：处于断流状态下的敌人被击败时，为达达利亚恢复元素能量。", "深渊之灾·纷争涡源：魔王武装·狂澜的技能等级提高3级。", "深渊之灾·舒流：极恶技·尽灭闪每4秒对敌人施加断流效果。", "极恶技·斩水斩雨：极恶技·尽灭闪的技能等级提高3级。", "极恶技·天使灭尽：施放极恶技·尽灭闪后，普通攻击和重击造成的伤害提升。" ],
+  "thoma": [ "同袍的义理：烈烧佑命之侍的护盾吸收量提升20%。", "随从的僚机：真红炽火之大铠的炽火大铠持续时间延长3秒。", "铠袖的缘由：烈烧佑命之侍的技能等级提高3级。", "家臣的方略：施放真红炽火之大铠后，为托马恢复元素能量。", "野火的豪烈：真红炽火之大铠的技能等级提高3级。", "燃烧的诚心：真红炽火之大铠的炽火崩破伤害提升。" ],
+  "tighnari": [ "始根初步：识果种雷的识蕴种子的伤害提升。", "茎脉分析：识果种雷的识蕴种子命中敌人时，提纳里的元素精通提升。", "株距量定：识果种雷的技能等级提高3级。", "叶荣知落：造生·缠藤箭的缠藤箭命中敌人时，队伍中角色元素精通提升。", "识诸繁芜：造生·缠藤箭的技能等级提高3级。", "灼果论述：造生·缠藤箭的蔓生箭数量增加1枚。" ],
+  "venti": [ "箭驻风：瞄准射击有33%概率额外发射一枚箭矢。", "眷恋的泠风：高天之歌降低敌人风元素抗性和物理抗性24%，持续10秒。", "千风的记忆：高天之歌的技能等级提高3级。", "自由的凛风：获得元素晶球或元素微粒时，温迪获得风元素伤害加成。", "高天的协奏：风神之诗的技能等级提高3级。", "抗争的暴风：风神之诗命中敌人时，降低敌人20%风元素抗性和对应元素抗性。" ],
+  "wanderer": [ "初番·茂风流羽行：优风倾姿状态下，流浪者的攻击速度提升10%。", "二番·箙岛廓白浪：优风倾姿状态下，流浪者的空居力上限提升至60点。", "三番·久世舞夕颜：羽画·风姿华歌的技能等级提高3级。", "四番·花月歌浮舟：施放狂言·式乐五番时，为流浪者恢复空居力。", "五番·久世梦华：狂言·式乐五番的技能等级提高3级。", "六番·大障：优风倾姿状态下，流浪者的普通攻击额外发射风矢。" ],
+  "wriothesley": [ "为恶者施以恶行：冰牙突驰的冰牙命中敌人时，为莱欧斯利恢复元素能量。", "囚徒本囚：冰牙突驰的冰牙造成的伤害提升25%。", "惩与罚的骗局：冰牙突驰的技能等级提高3级。", "王与王的血宴：黑金狼噬命中敌人时，降低敌人20%冰元素抗性。", "公道与公理之诉：黑金狼噬的技能等级提高3级。", "罪与罪的报偿：黑金狼噬的伤害提升。" ],
+  "xiangling": [ "外酥里嫩：锅巴攻击降低敌人15%火元素抗性，持续6秒。", "大火宽油：锅巴出击的最后一次攻击造成爆炸伤害。", "武火急烹：锅巴出击的技能等级提高3级。", "文火慢煨：旋火轮的持续时间延长4秒。", "锅巴凶猛：旋火轮的技能等级提高3级。", "大龙卷：旋火轮持续期间，队伍中角色获得火元素伤害加成。" ],
+  "xianyun": [ "借风洗尘：朝起鹤云的可使用次数增加1次。", "鹤唳远闻：朝起鹤云造成的伤害提升25%。", "云游山海：朝起鹤云的技能等级提高3级。", "偶得妙趣：暮集竹星的伤害提升30%，并为角色恢复元素能量。", "旋步霞蔚：暮集竹星的技能等级提高3级。", "知是留云：施放暮集竹星后，闲云获得风元素附魔，持续5秒。" ],
+  "xiao": [ "坏劫·毁坏三界：风轮两立的可使用次数增加1次。", "空劫·虚空华敷：靖妖傩舞状态下，魈的元素充能效率提升25%。", "降魔·忿怒显相：风轮两立的技能等级提高3级。", "神通·空中自在：魈的生命值低于50%时，获得防御力提升。", "成劫·无明增长：靖妖傩舞的技能等级提高3级。", "降魔·护法夜叉：靖妖傩舞状态下，下落攻击命中2个以上敌人时获得额外风轮两立使用次数。" ],
+  "xingqiu": [ "重帘留香：雨帘剑的数量增加1柄。", "万顷甘露：古华剑·裁雨留虹的持续时间延长3秒，降低敌人水元素抗性。", "织诗成锦：古华剑·画雨笼山的技能等级提高3级。", "孤舟斩蛟：古华剑·裁雨留虹持续期间，伤害提升。", "雨深闭门：古华剑·裁雨留虹的技能等级提高3级。", "万文集：古华剑·裁雨留虹每3次剑雨攻击，下一次剑雨攻击伤害大幅提升。" ],
+  "xinyan": [ "绝命的加速：热情拂扫造成暴击时，辛焱的普通攻击速度提升12%，持续5秒。", "即兴开路曲：热情拂扫的护盾吸收量提升。", "焖蒸之舞：热情拂扫的技能等级提高3级。", "节奏狂暴：叛逆刮弦的挥击伤害提升。", "安可的高呼：叛逆刮弦的技能等级提高3级。", "地狱里摇滚：叛逆刮弦的重击体力消耗降低30%，并获得攻击力加成。" ],
+  "yae-miko": [ "野狐供真篇：杀生樱每次发动时，为八重神子恢复8点元素能量。", "望月之吼哕：杀生樱的等级上限提高至5阶。", "七化之妙境：野干役咒·杀生樱的技能等级提高3级。", "绯樱诱雷章：杀生樱的落雷命中敌人时，附近角色雷元素伤害提升20%。", "暴恶嗤笑面：大密法·天狐显真的技能等级提高3级。", "大祓词：大密法·天狐显真无视敌人60%防御力。" ],
+  "yanfei": [ "占理不饶人：重击命中敌人时，提升烟绯的抗打断能力。", "最终解释权：重击对生命值低于50%的敌人，暴击率提升20%。", "真火炼宝印：律火迢迢的技能等级提高3级。", "丹书铁券：施放丹书立约时，为烟绯生成护盾。", "遵纪守法：丹书立约的技能等级提高3级。", "签了它：丹书立约的丹火印叠加层数上限增加1层。" ],
+  "yaoyao": [ "妙受琼门：云台团团降芦菔的月桂·投掷命中时，为瑶瑶恢复元素能量。", "正思无邪：处于月桂·抛掷远遥状态下时，瑶瑶的移动速度提升15%。", "键善行：云台团团降芦菔的技能等级提高3级。", "爱：玉颗珊珊下月轮的伤害提升。", "恻隐：玉颗珊珊下月轮的技能等级提高3级。", "慈惠：玉颗珊珊下月轮的草元素伤害提升。" ],
+  "yelan": [ "与谋者：萦络纵命索的可使用次数增加1次。", "入彀者：萦络纵命索的玄掷玲珑协同攻击时，额外发射一枚水箭。", "晃盅者：萦络纵命索的技能等级提高3级。", "诓骗者：渊图玲珑骰的玄掷玲珑持续时间延长3秒。", "笼钓者：渊图玲珑骰的技能等级提高3级。", "取胜者：施放渊图玲珑骰后，夜兰获得「破局」状态。" ],
+  "yoimiya": [ "赤玉琉金：琉金云间草的琉金火光持续时间延长4秒。", "万灯映火：琉金云间草的琉金火光爆炸时，造成额外火元素伤害。", "鼠戏花火：琉金云间草技能等级提高3级。", "花呗千灯：琉金尽染的琉金火光爆炸时，降低敌人15%火元素抗性。", "真宵狂走：琉金尽染的技能等级提高3级。", "长野原龙势流星群：琉金尽染的普通攻击额外发射一支焰硝矢。" ],
+  "yun-jin": [ "飞身步：旋云开相的冷却时间降低18%。", "诸般切末：破嶂见旌仪对敌人造成伤害时，附近角色普通攻击伤害提升。", "牙纛探海：旋云开相技能等级提高3级。", "昇堂吊云：破嶂见旌仪触发结晶反应时，附近角色防御力提升20%。", "天涯独俏：破嶂见旌仪的技能等级提高3级。", "庄谐并举：破嶂见旌仪的飞云旗阵持续时间延长。" ],
+  "zhongli": [ "岩者，六合引之为骨：天星的可持有数量增加1次。", "石者，八荒韫玉而明：天星落下时，为附近的角色生成玉璋护盾。", "圭璋，暝仍不移其晖：地心的技能等级提高3级。", "黄琮，破而不夺其坚：天星的石化持续时间延长2秒。", "苍璧，驱之长昭天理：天星的技能等级提高3级。", "金玉，礼予天地四方：玉璋护盾受到伤害时，恢复生命值。" ]
+};
+
+let allChars = [];
+let filteredChars = [];
+let currentFilters = { search:'', element:'', nation:'', weapon:'', rarity:0 };
+let currentSort = 'name';
+
+// ─── Image helper with fallback ───
+function imgSrc(id, size='icon') {
+  return `${API}/characters/${id}/${size}`;
+}
+function imgOnError(el) {
+  const id = el.dataset.cid;
+  const sz = el.dataset.size;
+  if (sz === 'icon-big') {
+    // Fallback: try the smaller icon
+    el.dataset.size = 'icon';
+    el.src = imgSrc(id, 'icon');
+    return;
+  }
+  // Final fallback: show placeholder
+  el.src = 'data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><rect fill=%22%231a1d2e%22 width=%22100%22 height=%22100%22/><text x=%2250%22 y=%2255%22 text-anchor=%22middle%22 font-size=%2240%22 fill=%22%23555570%22>❓</text></svg>';
+}
+
+// ─── Fetch ───
+const CACHE_KEY = 'genshin_chars_v3';
+const CACHE_TTL = 3600000; // 1 hour
+
+async function fetchAll() {
+  showLoading(true);
+  try {
+    // Try cache first
+    const cached = localStorage.getItem(CACHE_KEY);
+    if (cached) {
+      const { data, time } = JSON.parse(cached);
+      if (Date.now() - time < CACHE_TTL) {
+        allChars = data;
+        afterFetch();
+        return;
+      }
+    }
+
+    // Get character list
+    const slugs = await fetchJSON(`${API}/characters`);
+    const bar = document.querySelector('.loading-bar-inner');
+    
+    // Fetch all character details in parallel
+    const results = [];
+    const concurrency = 20;
+    for (let i = 0; i < slugs.length; i += concurrency) {
+      const batch = slugs.slice(i, i + concurrency);
+      const chunk = await Promise.all(
+        batch.map(slug => fetchJSON(`${API}/characters/${ slug }`).catch(() => null))
+      );
+      results.push(...chunk);
+      if (bar) bar.style.width = Math.min(100, (results.length / slugs.length) * 100) + '%';
+    }
+    
+    allChars = results.filter(Boolean);
+    // Filter out Traveler variants
+    allChars = allChars.filter(c => !c.id.startsWith('traveler-'));
+    // Cache
+    try { localStorage.setItem(CACHE_KEY, JSON.stringify({ data: allChars, time: Date.now() })); } catch(e) {}
+    afterFetch();
+  } catch(e) {
+    console.error('Failed to fetch:', e);
+    document.getElementById('charGrid').innerHTML = `
+      <div class="empty-state">
+        <div class="icon">😵</div>
+        <p>加载失败，请刷新页面重试</p>
+      </div>`;
+    showLoading(false);
+  }
+}
+
+function afterFetch() {
+  allChars.sort((a,b) => (b.release||'').localeCompare(a.release||''));
+  filteredChars = [...allChars];
+  applyFilters();
+  renderGrid();
+  showLoading(false);
+}
+
+async function fetchJSON(url) {
+  const res = await fetch(url);
+  if (!res.ok) throw new Error(res.statusText);
+  return res.json();
+}
+
+// ─── Filter Bar ───
+function buildFilterBar() {
+  const bar = document.getElementById('filterBar');
+  let html = '';
+  
+  // Element filters
+  html += `<div class="filter-group">`;
+  html += `<button class="filter-btn active" data-type="element" data-value="">全部</button>`;
+  ELEMENTS.forEach(e => {
+    html += `<button class="filter-btn" data-type="element" data-value="${e}" style="--ele-bg:var(--ele-bg);">
+      <span class="dot" style="background:var(--ele)"></span> ${ELE_CN[e]}
+    </button>`;
+  });
+  html += `</div>`;
+  
+  // Nation filters
+  html += `<div class="filter-group" id="nationFilter">`;
+  html += `<button class="filter-btn active" data-type="nation" data-value="">全部</button>`;
+  NATIONS.forEach(n => {
+    html += `<button class="filter-btn" data-type="nation" data-value="${n}">${EMOJI[n]||''} ${NATION_CN[n]}</button>`;
+  });
+  html += `</div>`;
+  
+  // Weapon filters
+  html += `<div class="filter-group">`;
+  html += `<button class="filter-btn active" data-type="weapon" data-value="">全部</button>`;
+  WEAPONS.forEach(w => {
+    html += `<button class="filter-btn" data-type="weapon" data-value="${w}">${EMOJI[w]} ${WEAPON_CN[w]}</button>`;
+  });
+  html += `</div>`;
+  
+  // Rarity filters
+  html += `<div class="filter-group">`;
+  html += `<button class="filter-btn active" data-type="rarity" data-value="0">全部</button>`;
+  RARITIES.forEach(r => {
+    html += `<button class="filter-btn" data-type="rarity" data-value="${r}">
+      <span class="star-icon">★</span> ${RARITY_CN[r]}
+    </button>`;
+  });
+  html += `</div>`;
+  
+  // Sort
+  html += `<select class="sort-select" id="sortSelect">
+    <option value="name">按名称</option>
+    <option value="rarity">按星级 ↓</option>
+    <option value="newest">最新 ↑</option>
+    <option value="nation">按国家</option>
+  </select>`;
+  
+  bar.innerHTML = html;
+  
+  // Filter click handlers
+  bar.querySelectorAll('.filter-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const type = btn.dataset.type;
+      const value = btn.dataset.value;
+      // Deactivate siblings
+      btn.closest('.filter-group').querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      currentFilters[type] = value;
+      applyFilters();
+    });
+  });
+  
+  // Sort handler
+  document.getElementById('sortSelect').addEventListener('change', e => {
+    currentSort = e.target.value;
+    applyFilters();
+  });
+  
+  // Search handler
+  document.getElementById('searchInput').addEventListener('input', e => {
+    currentFilters.search = e.target.value.trim().toLowerCase();
+    applyFilters();
+  });
+}
+
+// ─── Apply Filters ───
+function applyFilters() {
+  const { search, element, nation, weapon, rarity } = currentFilters;
+  
+  filteredChars = allChars.filter(c => {
+    const cn = getCN(c.id);
+    if (search && !c.name.toLowerCase().includes(search) &&
+        !c.title?.toLowerCase().includes(search) &&
+        !cn.toLowerCase().includes(search)) return false;
+    if (element && c.vision !== element) return false;
+    if (nation && c.nation !== nation) return false;
+    if (weapon && c.weapon !== weapon) return false;
+    if (rarity && c.rarity !== Number(rarity)) return false;
+    return true;
+  });
+  
+  // Sort
+  switch (currentSort) {
+    case 'name':
+      filteredChars.sort((a,b) => a.name.localeCompare(b.name));
+      break;
+    case 'rarity':
+      filteredChars.sort((a,b) => b.rarity - a.rarity || a.name.localeCompare(b.name));
+      break;
+    case 'newest':
+      filteredChars.sort((a,b) => (b.release||'').localeCompare(a.release||''));
+      break;
+    case 'nation':
+      filteredChars.sort((a,b) => (a.nation||'zzz').localeCompare(b.nation||'zzz') || a.name.localeCompare(b.name));
+      break;
+  }
+  
+  document.getElementById('totalCount').textContent = filteredChars.length;
+  renderGrid();
+}
+
+// ─── Render Grid ───
+function renderGrid() {
+  const grid = document.getElementById('charGrid');
+  
+  if (filteredChars.length === 0) {
+    grid.innerHTML = `<div class="empty-state">
+      <div class="icon">🔍</div>
+      <p>没有找到匹配的角色</p>
+    </div>`;
+    return;
+  }
+  
+  grid.innerHTML = filteredChars.map(c => {
+    const stars = Array(c.rarity).fill('★').join('');
+    const eleClass = `e-${c.vision}`;
+    
+    return `<div class="char-card ${eleClass}" onclick="openModal('${c.id}')" style="animation-delay:${Math.random()*0.2}s">
+      <div class="img-wrap">
+        <img src="${imgSrc(c.id,'icon-big')}" alt="${c.name}" loading="lazy" data-cid="${c.id}" data-size="icon-big"
+             onerror="imgOnError(this)">
+        <div class="rarity-badge">${stars.split('').map(()=>'<span class="s">★</span>').join('')}</div>
+        <div class="ele-badge" style="background:var(--ele-bg);box-shadow:0 0 10px var(--ele-glow);">${EMOJI[c.vision]||'?'}</div>
+      </div>
+      <div class="info">
+        <div class="name">${getCN(c.id) ? getCN(c.id)+' '+c.name : c.name}</div>
+        <div class="tags">
+          <span class="tag"><span class="ele-dot" style="background:var(--ele)"></span> ${ELE_CN[c.vision]||c.vision}</span>
+          <span class="tag">${EMOJI[c.weapon]} ${WEAPON_CN[c.weapon]||c.weapon}</span>
+          <span class="tag">${c.nation ? (EMOJI[c.nation]||'')+' '+NATION_CN[c.nation]||c.nation : '未知'}</span>
+        </div>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+// ─── Modal ───
+function openModal(slug) {
+  const c = allChars.find(x => x.id === slug);
+  if (!c) return;
+  
+  const overlay = document.getElementById('modalOverlay');
+  const content = document.getElementById('modalContent');
+  
+  const eleClass = `e-${c.vision}`;
+  const stars = Array(c.rarity).fill('★').join('');
+  
+  const talentsHTML = (c.skillTalents||[]).slice(0,3).map((t,i) => `
+    <div class="talent-item">
+      <div class="t-name">${(ZH_TALENTS[c.id]?.talents?.[i])|| t.name} <span class="t-type">${TYPE_CN[t.unlock]||t.unlock}</span></div>
+      <div class="t-desc">${(ZH_SKILLS[c.id]?.descs?.[i])||(t.description||'').substring(0,200)}</div>
+    </div>
+  `).join('');
+  
+  const constHTML = (c.constellations||[]).map(co => `
+    <div class="const-item">
+      <div class="c-name"><span class="c-lv">C${co.level}</span> ${(ZH_TALENTS[c.id]?.constellations?.[co.level-1])|| co.name}</div>
+      <div class="c-desc">${(ZH_CONST_DESC[c.id]?.[co.level-1])||(co.description||'').substring(0,200)}</div>
+    </div>
+  `).join('');
+  
+  const genderCN = c.gender === 'Male' ? '♂ 男' : c.gender === 'Female' ? '♀ 女' : c.gender||'未知';
+  
+  content.innerHTML = `
+    <button class="modal-close" onclick="closeModal()">✕</button>
+    
+    <div class="modal-header">
+      <img src="${API}/characters/${c.id}/portrait" alt="${c.name}"
+           onerror="this.src='${API}/characters/${c.id}/gacha-splash'"
+           loading="lazy">
+      <div class="header-overlay"></div>
+      <div class="header-info">
+        <div class="icon-wrap">
+          <img src="${imgSrc(c.id,'icon')}" alt="${c.name}" loading="lazy" data-cid="${c.id}" data-size="icon"
+               onerror="imgOnError(this)">
+        </div>
+        <div class="hi-text">
+          <h2>${getCN(c.id) ? getCN(c.id)+' '+c.name : c.name}</h2>
+          <div class="title">${ZH_DESC[c.id]?.title || c.title||''} · ${stars}</div>
+        </div>
+      </div>
+    </div>
+    
+    <div class="modal-body">
+      <div class="detail-grid">
+        <div class="detail-item">
+          <div class="label">元素</div>
+          <div class="value ${eleClass}"><span class="ele-dot" style="background:var(--ele)"></span> ${EMOJI[c.vision]} ${ELE_CN[c.vision]||c.vision}</div>
+        </div>
+        <div class="detail-item">
+          <div class="label">武器</div>
+          <div class="value">${EMOJI[c.weapon]} ${WEAPON_CN[c.weapon]||c.weapon}</div>
+        </div>
+        <div class="detail-item">
+          <div class="label">国家</div>
+          <div class="value">${c.nation ? (EMOJI[c.nation]||'')+' '+NATION_CN[c.nation]||c.nation : '未知'}</div>
+        </div>
+        <div class="detail-item">
+          <div class="label">性别</div>
+          <div class="value">${genderCN}</div>
+        </div>
+        <div class="detail-item">
+          <div class="label">星级</div>
+          <div class="value" style="color:var(--gold)">${stars}</div>
+        </div>
+        <div class="detail-item">
+          <div class="label">所属</div>
+          <div class="value">${c.affiliation||'无'}</div>
+        </div>
+        <div class="detail-item">
+          <div class="label">命座</div>
+          <div class="value">${c.constellation||'未知'}</div>
+        </div>
+        <div class="detail-item">
+          <div class="label">生日</div>
+          <div class="value">${c.birthday && c.birthday !== '0000-00-00' ? c.birthday.slice(5) : '未知'}</div>
+        </div>
+      </div>
+      
+      ${c.description ? `<div class="desc-box">${ZH_DESC[c.id]?.desc || c.description}</div>` : ''}
+      
+      ${talentsHTML ? `<div class="section-title">⚔️ 战斗天赋</div><div class="talent-list">${talentsHTML}</div>` : ''}
+      
+      ${constHTML ? `<div class="section-title">✨ 命之座</div><div class="const-list">${constHTML}</div>` : ''}
+    </div>
+  `;
+  
+  overlay.classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+
+function closeModal() {
+  const overlay = document.getElementById('modalOverlay');
+  overlay.classList.remove('open');
+  document.body.style.overflow = '';
+}
+
+// Click overlay to close
+document.getElementById('modalOverlay').addEventListener('click', e => {
+  if (e.target === e.currentTarget) closeModal();
+});
+
+// ESC to close
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape') {
+    if (document.getElementById('modalOverlay').classList.contains('open')) {
+      closeModal();
+    }
+  }
+});
+
+// ─── Random ───
+function pickRandom() {
+  if (filteredChars.length === 0) return;
+  const c = filteredChars[Math.floor(Math.random() * filteredChars.length)];
+  openModal(c.id);
+}
+
+// ─── Loading ───
+function showLoading(show) {
+  const grid = document.getElementById('charGrid');
+  if (show) {
+    grid.innerHTML = `<div class="loading-state">
+      <div class="spinner"></div>
+      <p>正在从提瓦特大陆加载角色数据...</p>
+      <div class="loading-bar"><div class="loading-bar-inner"></div></div>
+    </div>`;
+  }
+}
+
+// ─── Init ───
+buildFilterBar();
+fetchAll();
+</script>
+</body>
+</html>
