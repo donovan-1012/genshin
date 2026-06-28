@@ -3,7 +3,10 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>原神 · 角色图鉴</title>
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+<meta http-equiv="Pragma" content="no-cache">
+<meta http-equiv="Expires" content="0">
+<title>原神 · 角色图鉴 v4</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@300;400;500;600;700;900&display=swap" rel="stylesheet">
 <style>
@@ -475,6 +478,14 @@ body {
 <div class="close-msg" id="closeMsg"></div>
 
 <script>
+// ─── Clear old caches ───
+try {
+  for (let i = 0; i < localStorage.length; i++) {
+    const key = localStorage.key(i);
+    if (key && key !== 'genshin_chars_v3') localStorage.removeItem(key);
+  }
+} catch(e) {}
+
 // ─── Constants ───
 const API = 'https://genshin.jmp.blue';
 const ELEMENTS = ['Pyro','Hydro','Anemo','Electro','Dendro','Cryo','Geo'];
