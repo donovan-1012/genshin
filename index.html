@@ -1700,20 +1700,32 @@ let currentFilters = { search:'', element:'', nation:'', weapon:'', rarity:0 };
 let currentSort = 'name';
 
 // ─── Image helper with fallback ───
+const FALLBACK_CHAIN = {
+  'portrait': ['gacha-splash', 'icon-big', 'icon'],
+  'gacha-splash': ['icon-big', 'icon'],
+  'icon-big': ['icon'],
+  'icon': []
+};
+
 function imgSrc(id, size='icon') {
   return `${API}/characters/${id}/${size}`;
 }
+
 function imgOnError(el) {
   const id = el.dataset.cid;
   const sz = el.dataset.size;
-  if (sz === 'icon-big') {
-    // Fallback: try the smaller icon
-    el.dataset.size = 'icon';
-    el.src = imgSrc(id, 'icon');
+  const chain = FALLBACK_CHAIN[sz] || [];
+  for (const fallback of chain) {
+    // Check we haven't already tried this size
+    if (!el.dataset.tried) el.dataset.tried = '';
+    if (el.dataset.tried.includes(fallback)) continue;
+    el.dataset.size = fallback;
+    el.dataset.tried += sz + ',';
+    el.src = imgSrc(id, fallback);
     return;
   }
-  // Final fallback: show placeholder
-  el.src = 'data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><rect fill=%22%231a1d2e%22 width=%22100%22 height=%22100%22/><text x=%2250%22 y=%2255%22 text-anchor=%22middle%22 font-size=%2240%22 fill=%22%23555570%22>❓</text></svg>';
+  // All fallbacks exhausted
+  el.src = 'data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><rect fill=%22%231a1d2e%22 width=%22100%22 height=%22100%22/><text x=%2250%22 y=%2255%22 text-anchor=%22middle%22 font-size=%2240%22 fill=%22%23555570%22>?</text></svg>';
 }
 
 // ─── Fetch ───
@@ -1960,9 +1972,8 @@ function openModal(slug) {
     <button class="modal-close" onclick="closeModal()">✕</button>
     
     <div class="modal-header">
-      <img src="${API}/characters/${c.id}/portrait" alt="${c.name}"
-           onerror="this.src='${API}/characters/${c.id}/gacha-splash'"
-           loading="lazy">
+      <img src="${API}/characters/${c.id}/portrait" alt="${c.name}" data-cid="${c.id}" data-size="portrait"
+           onerror="imgOnError(this)" loading="lazy">
       <div class="header-overlay"></div>
       <div class="header-info">
         <div class="icon-wrap">
