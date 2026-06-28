@@ -1823,14 +1823,14 @@ function openModal(slug) {
   
   const talentsHTML = (c.skillTalents||[]).slice(0,3).map((t,i) => `
     <div class="talent-item">
-      <div class="t-name">${t.name} <span class="t-type">${t.unlock}</span></div>
-      <div class="t-desc">${(t.description||'').substring(0,200)}${(t.description||'').length>200?'...':''}</div>
+      <div class="t-name">${(ZH_TALENTS[c.id]?.talents?.[i])|| t.name} <span class="t-type">${TYPE_CN[t.unlock]||t.unlock}</span></div>
+      <div class="t-desc">${(ZH_SKILLS[c.id]?.descs?.[i])||(t.description||'').substring(0,200)}</div>
     </div>
   `).join('');
   
   const constHTML = (c.constellations||[]).map(co => `
     <div class="const-item">
-      <div class="c-name"><span class="c-lv">C${co.level}</span> ${co.name}</div>
+      <div class="c-name"><span class="c-lv">C${co.level}</span> ${(ZH_TALENTS[c.id]?.constellations?.[co.level-1])|| co.name}</div>
       <div class="c-desc">${(co.description||'').substring(0,200)}${(co.description||'').length>200?'...':''}</div>
     </div>
   `).join('');
