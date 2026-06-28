@@ -1688,8 +1688,25 @@ let filteredChars = [];
 let currentFilters = { search:'', element:'', nation:'', weapon:'', rarity:0 };
 let currentSort = 'name';
 
+// ─── Image helper with fallback ───
+function imgSrc(id, size='icon') {
+  return `${API}/characters/${id}/${size}`;
+}
+function imgOnError(el) {
+  const id = el.dataset.cid;
+  const sz = el.dataset.size;
+  if (sz === 'icon-big') {
+    // Fallback: try the smaller icon
+    el.dataset.size = 'icon';
+    el.src = imgSrc(id, 'icon');
+    return;
+  }
+  // Final fallback: show placeholder
+  el.src = 'data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><rect fill=%22%231a1d2e%22 width=%22100%22 height=%22100%22/><text x=%2250%22 y=%2255%22 text-anchor=%22middle%22 font-size=%2240%22 fill=%22%23555570%22>❓</text></svg>';
+}
+
 // ─── Fetch ───
-const CACHE_KEY = 'genshin_chars_v2';
+const CACHE_KEY = 'genshin_chars_v3';
 const CACHE_TTL = 3600000; // 1 hour
 
 async function fetchAll() {
@@ -1884,8 +1901,8 @@ function renderGrid() {
     
     return `<div class="char-card ${eleClass}" onclick="openModal('${c.id}')" style="animation-delay:${Math.random()*0.2}s">
       <div class="img-wrap">
-        <img src="${API}/characters/${c.id}/icon-big" alt="${c.name}" loading="lazy"
-             onerror="this.src='data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><rect fill=%22%231a1d2e%22 width=%22100%22 height=%22100%22/><text x=%2250%22 y=%2255%22 text-anchor=%22middle%22 font-size=%2240%22 fill=%22%23555570%22>❓</text></svg>'">
+        <img src="${imgSrc(c.id,'icon-big')}" alt="${c.name}" loading="lazy" data-cid="${c.id}" data-size="icon-big"
+             onerror="imgOnError(this)">
         <div class="rarity-badge">${stars.split('').map(()=>'<span class="s">★</span>').join('')}</div>
         <div class="ele-badge" style="background:var(--ele-bg);box-shadow:0 0 10px var(--ele-glow);">${EMOJI[c.vision]||'?'}</div>
       </div>
@@ -1938,7 +1955,8 @@ function openModal(slug) {
       <div class="header-overlay"></div>
       <div class="header-info">
         <div class="icon-wrap">
-          <img src="${API}/characters/${c.id}/icon" alt="${c.name}" loading="lazy">
+          <img src="${imgSrc(c.id,'icon')}" alt="${c.name}" loading="lazy" data-cid="${c.id}" data-size="icon"
+               onerror="imgOnError(this)">
         </div>
         <div class="hi-text">
           <h2>${getCN(c.id) ? getCN(c.id)+' '+c.name : c.name}</h2>
